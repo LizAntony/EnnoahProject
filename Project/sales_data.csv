@@ -1,0 +1,13 @@
+Location,Product,Units Sold,Unit Price,Date
+Boston,Laptop,12,899,05-01-2026
+Boston,Mouse,45,19,05-01-2026
+Boston,Keyboard,30,49,06-01-2026
+New York,Laptop,20,899,05-01-2026
+New York,Mouse,60,19,06-01-2026
+New York,Monitor,15,199,06-01-2026
+Chicago,Laptop,10,899,07-01-2026
+Chicago,Keyboard,25,49,07-01-2026
+Chicago,Monitor,18,199,08-01-2026
+Los Angeles,Laptop,14,899,05-01-2026
+Los Angeles,Mouse,50,19,06-01-2026
+Los Angeles,Monitor,22,199,07-01-2026

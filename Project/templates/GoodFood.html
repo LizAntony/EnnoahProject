@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}{% endblock %}</title>  
+<title>Centered Video</title>
+  <style>
+    .video-container {
+      display: flex;
+      justify-content: center; /* horizontal center */
+      align-items: center;     /* vertical center */
+      height: 60vh;           /* full viewport height */
+      background-color: ivory; /* optional background */
+    }
+    iframe {
+      width: 640px;
+      height: 360px;
+      border: none;
+    }
+
+body {background-color: ivory;}
+h2   {color: green;}
+p    {color: purple;}
+table, th, td {
+  border:0px solid black;
+}
+
+ .food-collections {
+    font-family: "Playfair Display", Georgia, serif;
+    color: #1f1f1f;
+    max-width: 980px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .header-bar h2 {
+    font-style: italic;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .homepage-link a {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #2b2b2b;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #d3b58a;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .homepage-link a:hover {
+    background: #d3b58a;
+    color: #fff;
+  }
+
+  .food-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .food-table th,
+  .food-table td {
+    padding: 0.85rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .food-table thead th {
+    background: #faf8f6;
+    font-weight: 700;
+  }
+
+
+.food-img {
+  width: 150px;       /* fixed width */
+  height: 150px;      /* fixed height */
+  object-fit: cover;  /* crops to fit nicely */
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+
+
+  .food-img:hover {
+    transform: scale(1.05);
+  }
+   .food-table tbody tr:hover {
+    background: #fcfcfc;
+  }
+  .food-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+  }
+
+  .food-list li {
+    padding: 0.4rem 0;
+  }
+
+  .food-list li:last-child {
+    border-bottom: none;
+  }
+.food-gallery {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .food-gallery td {
+    padding: 0.75rem;
+    vertical-align: top;
+    font-family: "Cormorant Garamond", Georgia, serif;
+  }
+
+  .food-img {
+    width: 120px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+  }
+
+  .food-img:hover {
+    transform: scale(1.05);
+  }
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 800px;        /* optional max width */
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;    /* modern way */
+  }
+  .video-wrapper > video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* or "contain" for full view */
+  }
+
+  .cart-control {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    background: #f4b400;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .qty-box {
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4b400;
+    border-radius: 20px;
+    padding: 6px 12px;
+    gap: 12px;
+  }
+
+  .left-btn, .plus-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .qty {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+</style>
+</head>
+<body>
+   {% extends "menu.html" %}
+
+    {% block content %}
+
+
+<section class="food-collections">
+  <div class="header-bar">
+    <h2>Nutritious & Delicious Food Collections</h2>
+    <div class="homepage-link">
+      <a href="welcome">HomePage</a>
+    </div>
+  </div>
+
+  <!-- Food Gallery Table -->
+  <table class="food-gallery">
+    <tr>
+
+<td><img src="{{ url_for('static', filename='images/salad.jpg') }}" 
+     alt="Fresh Garden Salad" class="food-img"></td>
+<td><img src="{{ url_for('static', filename='images/smoothie.jpg') }}" 
+     alt="Fruit Smoothie" class="food-img"></td>
+<td><img src="{{ url_for('static', filename='images/grilledfish.jpg') }}" 
+     alt="Grilled Salmon" class="food-img"></td>
+<td><img src="{{ url_for('static', filename='images/quinoa.jpg') }}" 
+     alt="Quinoa Bowl" class="food-img"></td>
+<td><img src="{{ url_for('static', filename='images/soup.jpg') }}" 
+     alt="Vegetable Soup" class="food-img"></td>
+
+    </tr>
+
+<tr>
+  <td>
+    <strong>Garden Fresh</strong><br>
+    Salad<br>
+    150–200 cal
+
+    <div class="cart-control">
+      <button class="add-btn" data-product="Garden Fresh Salad" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Garden Fresh Salad" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Garden Fresh Salad" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    <strong>Morning Glow</strong><br>
+    Smoothie<br>
+    180–250 cal
+
+    <div class="cart-control">
+      <button class="add-btn" data-product="Morning Glow Smoothie" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Morning Glow Smoothie" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Morning Glow Smoothie" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    <strong>Ocean Vitality</strong><br>
+    Grilled Fish<br>
+    300–400 cal
+
+    <div class="cart-control">
+      <button class="add-btn" data-product="Ocean Vitality Grilled Fish" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Ocean Vitality Grilled Fish" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Ocean Vitality Grilled Fish" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    <strong>Wholesome Bowl</strong><br>
+    Quinoa<br>
+    350–450 cal
+
+    <div class="cart-control">
+      <button class="add-btn" data-product="Wholesome Bowl Quinoa" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Wholesome Bowl Quinoa" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Wholesome Bowl Quinoa" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    <strong>Comfort Nourish</strong><br>
+    Soup<br>
+    200–280 cal
+
+    <div class="cart-control">
+      <button class="add-btn" data-product="Comfort Nourish Soup" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Comfort Nourish Soup" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Comfort Nourish Soup" onclick="increaseQty(this)">+</button>
+      </div>
+    </div>
+  </td>
+</tr>
+
+
+  </table>
+</section>
+<!-- Vimeo -->
+<div class = video-container>
+  <iframe 
+  src="https://player.vimeo.com/video/349059179" 
+  width="640" height="360" 
+  frameborder="0" 
+  allow="autoplay; fullscreen; picture-in-picture" 
+  allowfullscreen>
+</iframe>
+</div>
+
+  <!-- Food Collections Table -->
+  <table class="food-table">
+    <thead>
+      <tr>
+        <th>Collection</th>
+        <th>Type</th>
+        <th>Main Ingredients</th>
+        <th>Calories (avg)</th>
+        <th>Key Benefits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Garden Fresh</td>
+        <td>Salad</td>
+        <td>Lettuce, tomato, cucumber, olive oil</td>
+        <td>150–200</td>
+        <td>Rich in fiber, vitamins, hydrating</td>
+      </tr>
+
+      <tr>
+        <td>Morning Glow</td>
+        <td>Smoothie</td>
+        <td>Banana, berries, yogurt, chia seeds</td>
+        <td>180–250</td>
+        <td>Antioxidants, protein, energy boost</td>
+      </tr>
+      <tr>
+        <td>Ocean Vitality</td>
+        <td>Grilled Fish</td>
+        <td>Salmon, lemon, herbs</td>
+        <td>300–400</td>
+        <td>Omega‑3s, lean protein, heart health</td>
+      </tr>
+      <tr>
+        <td>Wholesome Bowl</td>
+        <td>Grain Bowl</td>
+        <td>Quinoa, chickpeas, spinach, avocado</td>
+        <td>350–450</td>
+        <td>Plant protein, minerals, sustained energy</td>
+      </tr>
+      <tr>
+        <td>Comfort Nourish</td>
+        <td>Soup</td>
+        <td>Carrots, celery, lentils, broth</td>
+        <td>200–280</td>
+        <td>Immune support, warming, low fat</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Food Categories List -->
+  <h3>Shop by Category</h3>
+  <ul class="food-list">
+    <li><strong>Salads:</strong> Fresh, crisp, vitamin‑packed meals</li>
+    <li><strong>Smoothies:</strong> Quick energy with fruits & seeds</li>
+    <li><strong>Grilled Fish:</strong> Lean protein with healthy fats</li>
+    <li><strong>Grain Bowls:</strong> Balanced plant‑based nutrition</li>
+    <li><strong>Soups:</strong> Comforting, light, and nourishing</li>
+  </ul>
+</section>
+<script>
+ function activateQty(btn) {
+    const wrapper = btn.parentElement;
+
+    // Hide Add button, show qty box
+    btn.style.display = "none";
+    wrapper.querySelector(".qty-box").style.display = "flex";
+
+    // Prevent double-adding
+    if (btn.dataset.selected === "true") return;
+    btn.dataset.selected = "true";
+
+    // Get product name
+    const productName = btn.dataset.product;
+
+    // Load cart
+    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    // Add item with qty = 1
+    cartItems.push({
+        name: productName,
+        qty: 1
+    });
+
+    // Save back to storage
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+    // ⭐ Update top bar count immediately
+    updateCartCount();
+}
+
+  function increaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+    qty++;
+
+    qtySpan.textContent = qty;
+
+    if (qty >= 2) {
+      leftBtn.textContent = "−";
+    }
+  }
+
+  function decreaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+    const addBtn = box.parentElement.querySelector(".add-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+
+    if (qty === 1) {
+      box.style.display = "none";
+      addBtn.style.display = "inline-block";
+      return;
+    }
+
+    qty--;
+    qtySpan.textContent = qty;
+
+    if (qty === 1) {
+      leftBtn.textContent = "🗑️";
+    }
+  }
+function updateCartCount() {
+    let items = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (!Array.isArray(items)) {
+        items = [];
+        localStorage.setItem("cartItems", JSON.stringify(items));
+    }
+
+    let totalQty = 0;
+    items.forEach(i => totalQty += i.qty);
+
+    const cartCountEl = document.getElementById("cart-count");
+    if (cartCountEl) {
+        cartCountEl.textContent = totalQty;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+</script>
+    <footer>
+        <p>&copy; 2025 Ennoah. All rights reserved.</p>
+    </footer>
+{% endblock %}
+</body>
+</html>

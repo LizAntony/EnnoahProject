@@ -1,0 +1,108 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<div class="invoice-container">
+
+  <h2>Your Cart</h2>
+
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="invoice-body"></tbody>
+  </table>
+
+  <div class="invoice-total">
+    <strong>Grand Total: </strong>
+    <span id="grand-total"></span>
+  </div>
+</div>
+<div class="payment-section">
+<button class="pay-btn" onclick="completePayment()">
+    Make Payment
+</button>
+</div>
+<script>
+    /* ⭐ Add ALL product prices here */
+    const productPrices = {
+        "Garden Fresh": 4.99,
+        "Morning Glow Smoothie": 5.99,
+        "Ocean Vitality Grilled Fish": 12.49,
+        "Wholesome Bowl Quinoa": 8.99,
+        "Comfort Nourish Soup": 6.49
+    };
+
+    function renderInvoice() {
+        const tbody = document.getElementById("invoice-body");
+        tbody.innerHTML = "";
+
+        const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+        let grandTotal = 0;
+
+        // ⭐ Sort alphabetically by item name
+        items.sort((a, b) => a.name.localeCompare(b.name));
+
+        items.forEach(item => {
+            const price = productPrices[item.name];
+            const safePrice = price ? price : 0;
+
+            const lineTotal = safePrice * item.qty;
+            grandTotal += lineTotal;
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>${item.qty}</td>
+                <td>$${safePrice.toFixed(2)}</td>
+                <td>$${lineTotal.toFixed(2)}</td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+        // ⭐ Update grand total
+        document.getElementById("grand-total").textContent =
+            "$" + grandTotal.toFixed(2);
+    }
+
+    // ⭐ This stays at the bottom
+    document.addEventListener("DOMContentLoaded", renderInvoice);
+
+    // ⭐ Payment function
+  function completePayment() {
+    const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (items.length > 0) {
+        // Save order to history
+        let history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+        history.push({
+            date: new Date().toLocaleString(),
+            items: items
+        });
+        localStorage.setItem("orderHistory", JSON.stringify(history));
+    }
+
+    // ⭐ Clear cart fully
+    localStorage.removeItem("cartItems");
+    localStorage.setItem("cartItems", JSON.stringify([])); // force empty array
+
+    // ⭐ Reset cart count immediately
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+        cartCount.textContent = 0;
+    }
+
+    // ⭐ Small delay so browser finishes saving before redirect
+    setTimeout(() => {
+        window.location.href = "{{ url_for('thankyou') }}";
+    }, 50);
+}
+</script>
+{% endblock %}

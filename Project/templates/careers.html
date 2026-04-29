@@ -1,0 +1,65 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<div class="careers-page">
+
+    <!-- LEFT FILTER PANEL -->
+    <div class="career-filters">
+        <h3>Filter Jobs</h3>
+
+        <label>Job Type</label>
+        <select>
+            <option>All</option>
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Internship</option>
+        </select>
+
+        <label>Location</label>
+        <select>
+            <option>Any</option>
+            <option>Remote</option>
+            <option>On-site</option>
+            <option>Hybrid</option>
+        </select>
+
+        <label>Department</label>
+        <select>
+            <option>All</option>
+            <option>Business</option>
+            <option>Marketing</option>
+            <option>Technology</option>
+            <option>Operations</option>
+        </select>
+    </div>
+
+    <!-- RIGHT JOB LIST -->
+    <div class="career-list">
+
+        <div class="career-card">
+            <h4>Business Analyst</h4>
+            <p class="company">Ennoah HQ</p>
+            <p class="salary">$60–90K/yr · Full-time</p>
+            <p class="location">Remote · Posted Today</p>
+        </div>
+
+        <div class="career-card">
+            <h4>Marketing Intern</h4>
+            <p class="company">Ennoah Media</p>
+            <p class="salary">$18/hr · Internship</p>
+            <p class="location">New York, NY · Posted Today</p>
+        </div>
+
+        <div class="career-card">
+            <h4>Digital Product Analyst</h4>
+            <p class="company">Ennoah Tech</p>
+            <p class="salary">$70–110K/yr · Full-time</p>
+            <p class="location">Boston, MA · Posted 1 day ago</p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

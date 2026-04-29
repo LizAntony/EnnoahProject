@@ -1,0 +1,88 @@
+<section class="edu-section">
+  <div class="header-bar">
+    <h2>Educational Classes</h2>
+    <div class="homepage-link">
+      <a href="welcome.html" target="_blank">HomePage</a>
+    </div>
+  </div>
+
+  <p class="intro">
+    Explore a wide range of skill‑building classes. All details are automatically loaded from our course database.
+  </p>
+
+  <table class="edu-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Class Name</th>
+        <th>Instructor</th>
+        <th>Timings</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for c in classes %}
+      <tr>
+        <td>{{ c.Category }}</td>
+        <td>{{ c['Class Name'] }}</td>
+        <td>{{ c.Instructor }}</td>
+        <td>{{ c.Timings }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<style>
+  .edu-section {
+    font-family: "Playfair Display", serif;
+    max-width: 980px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .intro {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .edu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .edu-table th, .edu-table td {
+    padding: 0.75rem;
+    border: 1px solid #eee;
+  }
+
+  .edu-table thead th {
+    background: #faf8f6;
+    font-weight: 700;
+  }
+
+  .homepage-link a {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #2b2b2b;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #d3b58a;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .homepage-link a:hover {
+    background: #d3b58a;
+    color: #fff;
+  }
+
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>

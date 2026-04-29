@@ -1,0 +1,75 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<!-- Your Rewards & Offers layout goes here -->
+<div class="rewards-page">
+
+    <!-- LEFT FILTER PANEL -->
+    <div class="filters">
+        <h3>Filter Offers</h3>
+
+        <label>Category</label>
+        <select>
+            <option>All</option>
+            <option>Food</option>
+            <option>Clothing</option>
+            <option>Bags</option>
+            <option>Stories</option>
+        </select>
+
+        <label>Discount Range</label>
+        <select>
+            <option>All</option>
+            <option>10% - 20%</option>
+            <option>20% - 40%</option>
+            <option>40% - 60%</option>
+            <option>60%+</option>
+        </select>
+
+        <label>Expiry</label>
+        <select>
+            <option>Any</option>
+            <option>Expiring Soon</option>
+            <option>New Offers</option>
+        </select>
+    </div>
+
+    <!-- RIGHT SIDE: OFFER CARDS -->
+    <div class="offers-grid">
+
+        <div class="offer-card">
+            <h4>20% Off NutriDelish Meals</h4>
+            <p class="date">Valid until: March 30</p>
+            <p class="location">Category: Food</p>
+            <p class="org">Ennoah Rewards</p>
+        </div>
+
+        <div class="offer-card">
+            <h4>Buy 1 Get 1 Free – Stylish Clothing</h4>
+            <p class="date">Valid until: April 5</p>
+            <p class="location">Category: Clothing</p>
+            <p class="org">Ennoah Fashion</p>
+        </div>
+
+        <div class="offer-card">
+            <h4>15% Off Designer Bags</h4>
+            <p class="date">Valid until: April 10</p>
+            <p class="location">Category: Bags</p>
+            <p class="org">Ennoah Accessories</p>
+        </div>
+
+        <div class="offer-card">
+            <h4>Free Story Download</h4>
+            <p class="date">Valid until: March 31</p>
+            <p class="location">Category: Stories</p>
+            <p class="org">Ennoah Stories</p>
+        </div>
+ <div class="events-card" onclick="window.location.href='{{ url_for('events') }}'">
+    <h3>Events</h3>
+    <p>See all events</p>
+</div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<h2 class="account-title">Your Account</h2>
+
+<div class="account-grid">
+
+    <div class="account-card">
+        <h4>Your Orders</h4>
+        <p>Track, return, or reorder items</p>
+    </div>
+
+    <div class="account-card">
+        <h4>Login & Security</h4>
+        <p>Edit login, name, and mobile number</p>
+    </div>
+
+    <div class="account-card">
+        <h4>Your Addresses</h4>
+        <p>Manage your saved delivery locations</p>
+    </div>
+
+<div class="account-card" onclick="window.location.href='{{ url_for('payments') }}'">
+    <h4>Your Payments</h4>
+    <p>Manage cards, UPI, and transactions</p>
+</div>
+
+    <div class="account-card">
+        <h4>Your Lists</h4>
+        <p>View, modify, and share your lists</p>
+    </div>
+
+    <div class="account-card">
+        <h4>Gift Cards</h4>
+        <p>Check balance or redeem a gift card</p>
+    </div>
+
+    <div class="account-card">
+        <h4>Digital Services</h4>
+        <p>Manage subscriptions and devices</p>
+    </div>
+
+    <div class="account-card">
+        <h4>Customer Service</h4>
+        <p>Help articles, FAQs, and support</p>
+    </div>
+
+</div>
+
+{% endblock %}

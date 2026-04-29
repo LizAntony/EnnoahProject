@@ -1,0 +1,267 @@
+import pandas as pd
+import numpy as np
+
+############################################
+# 1. DATA LOADING
+############################################
+
+def load_from_excel(path, sheet_name=0):
+    """
+    Expects columns at minimum: Date, Close, Volume.
+    You can add others like High, Low, Open, etc.
+    """
+    df = pd.read_excel(path, sheet_name=sheet_name)
+    df = df.sort_values('Date')
+    df.set_index('Date', inplace=True)
+    return df
+
+
+def load_from_access(conn_str, query):
+    """
+    conn_str example:
+    r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\\path\\file.accdb;'
+    """
+    import pyodbc
+    conn = pyodbc.connect(conn_str)
+    df = pd.read_sql(query, conn)
+    conn.close()
+    df = df.sort_values('Date')
+    df.set_index('Date', inplace=True)
+    return df
+
+############################################
+# 2. FEATURE ENGINEERING
+############################################
+
+def rolling_entropy(series, window=20, bins=20):
+    """
+    Simple Shannon entropy on rolling returns using histogram bins.
+    """
+    def entropy_for_window(x):
+        hist, _ = np.histogram(x, bins=bins, density=True)
+        hist = hist[hist > 0]
+        return -np.sum(hist * np.log(hist))
+    return series.rolling(window).apply(entropy_for_window, raw=True)
+
+
+def compute_features(df, price_col='Close', volume_col='Volume', window=20):
+    """
+    Adds:
+    - returns
+    - price_gradient
+    - vol (realized volatility)
+    - vol_speed
+    - volume_accel
+    - entropy
+    """
+    df = df.copy()
+
+    # daily returns
+    df['ret'] = df[price_col].pct_change()
+
+    # price gradient = slope of price over rolling window
+    # using simple linear regression on each window (x = 0..window-1)
+    x = np.arange(window)
+    def rolling_slope(y):
+        if len(y) < window:
+            return np.nan
+        # OLS slope: cov(x,y)/var(x)
+        return np.cov(x, y)[0, 1] / np.var(x)
+
+    df['price_gradient'] = df[price_col].rolling(window).apply(rolling_slope, raw=True)
+
+    # realized volatility (std of returns * sqrt(252))
+    df['vol'] = df['ret'].rolling(window).std() * np.sqrt(252)
+
+    # volatility speed = change in vol
+    df['vol_speed'] = df['vol'].diff()
+
+    # volume acceleration = difference vs rolling mean
+    df['vol_ma'] = df[volume_col].rolling(window).mean()
+    df['volume_accel'] = df[volume_col] - df['vol_ma']
+
+    # entropy on returns
+    df['entropy'] = rolling_entropy(df['ret'], window=window, bins=20)
+
+    return df
+
+############################################
+# 3. DECISION TREE PARAMETERS
+############################################
+
+class DecisionTreeParams:
+    def __init__(self,
+                 entropy_low=-np.inf,
+                 entropy_high=np.inf,
+                 grad_up_thresh=0.0,
+                 grad_down_thresh=0.0,
+                 vol_speed_up=0.0,
+                 vol_speed_down=0.0,
+                 volume_accel_min=0.0):
+        self.entropy_low = entropy_low
+        self.entropy_high = entropy_high
+        self.grad_up_thresh = grad_up_thresh
+        self.grad_down_thresh = grad_down_thresh
+        self.vol_speed_up = vol_speed_up
+        self.vol_speed_down = vol_speed_down
+        self.volume_accel_min = volume_accel_min
+
+
+############################################
+# 4. DECISION TREE LOGIC
+############################################
+
+def regime_filter(row, params: DecisionTreeParams):
+    """
+    Layer 1: Regime.
+    Returns: 'NO_TRADE', 'INCOME_ONLY', or 'TRADABLE'
+    """
+    entropy = row['entropy']
+    vol_speed = row['vol_speed']
+    volume_accel = row['volume_accel']
+
+    if pd.isna(entropy) or pd.isna(vol_speed) or pd.isna(volume_accel):
+        return 'NO_TRADE'
+
+    # Very high entropy => too chaotic
+    if entropy > params.entropy_high:
+        return 'NO_TRADE'
+
+    # Very low entropy + flat vol/volume => dead market
+    if (entropy < params.entropy_low and
+        abs(vol_speed) < abs(params.vol_speed_up) and
+        abs(volume_accel) < abs(params.volume_accel_min)):
+        return 'INCOME_ONLY'
+
+    # Otherwise tradable
+    return 'TRADABLE'
+
+
+def directional_decision(row, params: DecisionTreeParams):
+    """
+    Layer 2: Direction (on tradable regime).
+    Returns: 'BULL', 'BEAR', or 'NEUTRAL'
+    """
+    grad = row['price_gradient']
+    volume_accel = row['volume_accel']
+
+    if pd.isna(grad) or pd.isna(volume_accel):
+        return 'NEUTRAL'
+
+    # Need some volume confirmation
+    has_volume = volume_accel > params.volume_accel_min
+
+    if grad > params.grad_up_thresh and has_volume:
+        return 'BULL'
+    elif grad < params.grad_down_thresh and has_volume:
+        return 'BEAR'
+    else:
+        return 'NEUTRAL'
+
+
+def structure_decision(row, regime, direction, params: DecisionTreeParams):
+    """
+    Layer 3: Structure / strategy choice.
+    For simplicity, we classify into broad buckets.
+    Returns text like:
+      'NO_TRADE', 'HEDGE_ONLY', 'BULL_CALL_SPREAD', 'BEAR_PUT_SPREAD',
+      'BUTTERFLY', 'IRON_CONDOR', etc.
+    """
+    if regime == 'NO_TRADE':
+        return 'HEDGE_ONLY'
+
+    vol_speed = row['vol_speed']
+
+    # If income-only regime
+    if regime == 'INCOME_ONLY':
+        # Assume vol is somewhat elevated – use neutral income strategies
+        return 'IRON_CONDOR'
+
+    # TRADABLE regime
+    if direction == 'BULL':
+        if vol_speed > params.vol_speed_up:
+            # rising vol – bullish + long vol structure
+            return 'BULL_CALL_SPREAD'
+        elif vol_speed < params.vol_speed_down:
+            # falling vol – bullish + sell premium
+            return 'BULL_PUT_CREDIT_SPREAD'
+        else:
+            # stable vol
+            return 'STOCK_PLUS_COVERED_CALL'
+
+    elif direction == 'BEAR':
+        if vol_speed > params.vol_speed_up:
+            return 'BEAR_PUT_SPREAD'
+        elif vol_speed < params.vol_speed_down:
+            return 'BEAR_CALL_CREDIT_SPREAD'
+        else:
+            return 'SHORT_STOCK_PLUS_PUT_SPREAD'
+
+    else:  # NEUTRAL
+        if abs(vol_speed) < 1e-8:
+            # stable vol
+            return 'BUTTERFLY'
+        else:
+            # expect movement, maybe long straddle/strangle (not implemented here)
+            return 'CALENDAR_SPREAD'
+
+
+def apply_decision_tree(df, params: DecisionTreeParams):
+    """
+    Applies full decision tree row-by-row.
+    Adds columns: Regime, Direction, Strategy
+    """
+    df = df.copy()
+    regimes = []
+    directions = []
+    strategies = []
+
+    for idx, row in df.iterrows():
+        regime = regime_filter(row, params)
+        direction = directional_decision(row, params) if regime == 'TRADABLE' else 'NEUTRAL'
+        strategy = structure_decision(row, regime, direction, params)
+
+        regimes.append(regime)
+        directions.append(direction)
+        strategies.append(strategy)
+
+    df['Regime'] = regimes
+    df['Direction'] = directions
+    df['Strategy'] = strategies
+
+    return df
+
+############################################
+# 5. MAIN EXAMPLE
+############################################
+
+if __name__ == '__main__':
+    # Example: load from Excel
+    excel_path = r'C:\path\to\your\data.xlsx'
+    df = load_from_excel(excel_path, sheet_name=0)
+
+    # Compute features
+    df = compute_features(df, price_col='Close', volume_col='Volume', window=20)
+
+    # Define thresholds (you will tune these)
+    params = DecisionTreeParams(
+        entropy_low=df['entropy'].quantile(0.2),   # low entropy threshold
+        entropy_high=df['entropy'].quantile(0.8),  # high entropy threshold
+        grad_up_thresh=0.0,                        # >0 uptrend (can tune to quantile)
+        grad_down_thresh=0.0,                      # <0 downtrend
+        vol_speed_up=df['vol_speed'].quantile(0.7),
+        vol_speed_down=df['vol_speed'].quantile(0.3),
+        volume_accel_min=df['volume_accel'].quantile(0.6)
+    )
+
+    # Apply decision tree
+    df_signals = apply_decision_tree(df, params)
+
+    # Inspect last few rows
+    print(df_signals[['Close', 'entropy', 'price_gradient',
+                      'vol', 'vol_speed', 'volume_accel',
+                      'Regime', 'Direction', 'Strategy']].tail())
+
+    # Save back to Excel if you want
+    out_path = r'C:\path\to\output_with_signals.xlsx'
+    df_signals.to_excel(out_path)

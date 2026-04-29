@@ -1,0 +1,26 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<div class="signin-page-center">
+    <form action="/streaming" method="POST" class="signin-box">
+
+        <h2 class="signin-title">Sign In</h2>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <button class="cartoon-btn signin-btn">Sign In</button>
+
+        <p class="signin-footer">
+            New to Ennoah?
+            <a href="/register">Create an account</a>
+        </p>
+
+    </form>
+</div>
+
+{% endblock %}
