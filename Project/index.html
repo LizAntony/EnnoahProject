@@ -1,54 +1,371 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Meeting Scheduler</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    .btn { background: #2b6cb0; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; }
-    .badge { padding: 2px 6px; background: #edf2f7; border: 1px solid #cbd5e0; border-radius: 4px; }
-    .flash { margin: 8px 0; padding: 8px; border-radius: 4px; }
-    .success { background: #c6f6d5; }
-    .error { background: #fed7d7; }
-    table { border-collapse: collapse; width: 100%; margin-top: 16px; }
-    th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
-  </style>
+    <meta charset="UTF-8">
+	<title>{% block title %}{% endblock %}</title>
+    <title>Available Products</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 40px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input, select {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            flex: 1;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+            background-color: #f0f8ff;
+        }
+button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    background-color: #2c3e50;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #34495e;
+}
+body {background-color: ivory;}
+h2   {color: blue;}
+p    {color: purple;}
+
+ .elegant-title {
+    font-family: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: #2b2b2b;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    margin: 0.2rem 0;
+    text-rendering: optimizeLegibility;
+    font-variant-ligatures: discretionary-ligatures;
+  }
+  .elegant-title::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: 2px;
+    margin-top: 0.5rem;
+    background: linear-gradient(90deg, #b28c6e, #d3b58a, #b28c6e);
+    border-radius: 2px;
+    opacity: 0.8;
+  }
+  body {
+    background-color: ivory; /* page background */
+    font-family: "Georgia", serif;
+  }
+  table {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+  }
+  td {
+    padding: 15px;
+    vertical-align: top;
+    border: none;
+  }
+  img {
+    display: block;
+    margin: 0 auto 20px auto; /* extra space between image and title/button */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  p {
+    font-size: 14px;
+    color: #555;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+  }
+  .btn-link {
+    display: inline-block;
+    font-style: italic;
+    font-size: 15px;
+    text-decoration: none;
+    color: gold; /* text in gold */
+    background: #00695c; /* peacock green */
+    padding: 10px 18px;
+    border-radius: 6px;
+    margin: 0 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+  .btn-link:hover {
+    background: #004d40; /* darker peacock green on hover */
+    color: #ffd700; /* brighter gold hover */
+    box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+  }
+
+  /* Alternating row colors */
+    #product-table tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    #product-table tbody tr:nth-child(even) {
+        background-color: #e0e0e0;
+    }
+
+    /* Hover effect */
+    #product-table tbody tr:hover {
+        background-color: #cce5ff;
+        cursor: pointer;
+    }
+
+    /* Table styling */
+    #product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    #product-table th, #product-table td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ccc;
+    }
+
+     /* Light magenta header with yellow text */
+    #product-table th {
+        background-color: Brown; /* Light magenta */
+        color: White; /* Yellow text */
+	font-style: italic; /* Italic text */
+
+    }
+
+    /* Table styling */
+#product-table {
+    width: 60%;            /* Reduce table size */
+    margin: 20px auto;     /* Center the table */
+    border-collapse: collapse;
+}
+
+#product-table th, #product-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+.btn-link {
+  display: inline-block;
+  background-color: #2b6cb0;
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 4px;
+}
+
+
+    </style>
 </head>
 <body>
-  <h1>Meeting Scheduler</h1>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="flash {{ category }}">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+ {% extends "menu.html" %}
+    {% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+<h3 class="elegant-title">The Ennoah</h3>
+<table>
+<td colspan="4" style="text-align:left; padding-top:5px;">
+</table>
+<div class="controls">
+    <input type="text" id="searchInput" placeholder="Search products..." />
+    <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="Food">Food</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Bags">Bags</option>
+	<option value="Stories">Stories</option>
+    </select>
+    <select id="sortPrice">
+        <option value="">Sort by Price</option>
+        <option value="asc">Low to High</option>
+        <option value="desc">High to Low</option>
+    </select>
+    <button id="clearFilters">Clear</button>
+</div>
+   
+ 
+<!--<h2>Relative URLs</h2>
+<h2>Heading 1</h2>
+<h2>Heading 2</h2>
+<h3>Heading 3</h3>
+<h4>Heading 4</h4>
+<h5>Heading 5</h5>
+<h6>Heading 6</h6>-->
+<table>
+  <tr>
+     <td>
+      <img src="goodfood.jpg" alt="NutriDelish Food" width="200" height="150">
+      <p>Discover wholesome and delicious meals crafted with care, blending nutrition and taste for every occasion.</p>
+      <a href="GoodFood.html" class="btn-link">NutriDelish Gourmet Foods</a>
+    </td>
+    <td>
+      <img src="clothing.jpeg" alt="Elegant Clothing" width="200" height="150">
+      <p>Explore timeless fashion pieces designed to bring out elegance and confidence in every style.</p>
+      <a href="StylishClothing.html" class="btn-link">Elegant & Stylish Clothing</a>
+    </td>
+    <td>
+      <img src="bags.jpg.jpeg" alt="Aesthetic Bags" width="200" height="150">
+      <p>From chic handbags to practical totes, find accessories that combine beauty with everyday functionality.</p>
+      <a href="Bags.html" class="btn-link">Designer & Aesthetic Bags</a>
+    </td>
+    <td>
+      <img src="BestStories.jpeg" alt="Profound Stories" width="200" height="150">
+      <p>Immerse yourself in captivating tales that inspire, entertain, and leave a lasting impression.</p>
+      <a href="Stories.html" class="btn-link">Inspiring & Profound Stories</a>
+    </td>
+  </tr>
+  <!-- Shop paragraph row -->
+  <tr>
+    <td colspan="4" style="text-align:center; padding:10px;"> 
+    </td>
+  </tr>
+  
+<tr>
+  <td colspan="4" style="text-align:center; padding:10px;">
+    <p style="font-family:Georgia, serif; font-style:italic; color:#444; font-size:16px; margin-top:10px;">
+  🌸 🛍️ Our shop brings together food, fashion, accessories, and inspiring stories, 
+  all curated to enrich your lifestyle with quality, elegance, and meaning 🌸
+  </td>
+</tr>
+<!-- Contact + Facebook row -->
+  <tr>
+  <td colspan="4" style="text-align:center; padding:10px;">
+    <a href="mailto:elizabethxantony@gmail.com" class="btn-link">📧 Contact Me</a>
+    <a href="https://www.facebook.com/elizabeth.antony.54" target="_blank" class="btn-link">🌐 Connect on Facebook</a>
+  </td>
+</tr>
+<!-- Schedule Meeting row -->
+<tr>
+  <td colspan="4" style="text-align:center; padding:10px;">
+    <a href="/schedule" class="btn-link">📅 Schedule a Meeting</a>
+  </td>
+</tr>
 
-  <a class="btn" href="{{ url_for('schedule') }}">Schedule a new meeting</a>
-
-  <table>
+</table>
+<table border="1" id="product-table">
     <thead>
-      <tr>
-        <th>Title</th>
-        <th>Organizer</th>
-        <th>Attendee</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Join link</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in meetings %}
         <tr>
-          <td>{{ m[1] }}</td>
-          <td>{{ m[2] }}</td>
-          <td>{{ m[3] }}</td>
-          <td>{{ m[4] }}</td>
-          <td>{{ m[5] }}</td>
-          <td><span class="badge">{{ base_url }}/join/{{ m[6] }}</span></td>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price ($)</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    </thead>
+    <tbody id="product-list"></tbody>
+</table>
+
+ <div class="container">
+        
+        <ul id="product-list"></ul>
+    </div>
+
+
+<script>
+    let allProducts = [];
+
+    function renderProducts(products) {
+        const list = document.getElementById('product-list');
+        list.innerHTML = '';
+        products.forEach(product => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${product['Product Name']}</td>
+                <td>${product['Category']}</td>
+                <td>${product['Price']}</td>
+            `;
+            list.appendChild(row);
+        });
+    }
+
+    fetch('http://127.0.0.1:5000/get-products')
+        .then(response => response.json())
+        .then(data => {
+            allProducts = data;
+            renderProducts(allProducts);
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            document.getElementById('product-list').innerHTML =
+                '<tr><td colspan="3">Unable to load products.</td></tr>';
+        });
+
+    document.getElementById('searchInput').addEventListener('input', filterProducts);
+    document.getElementById('categoryFilter').addEventListener('change', filterProducts);
+    document.getElementById('sortPrice').addEventListener('change', filterProducts);
+    document.getElementById('clearFilters').addEventListener('click', () => {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('sortPrice').value = '';
+        renderProducts(allProducts);
+    });
+
+    function filterProducts() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const selectedCategory = document.getElementById('categoryFilter').value;
+        const sortOrder = document.getElementById('sortPrice').value;
+
+        let filtered = allProducts.filter(product => {
+            const matchesSearch = product['Product Name'].toLowerCase().includes(searchTerm);
+            const matchesCategory = selectedCategory === '' || product['Category'] === selectedCategory;
+            return matchesSearch && matchesCategory;
+        });
+
+        if (sortOrder === 'asc') {
+            filtered.sort((a, b) => a['Price'] - b['Price']);
+        } else if (sortOrder === 'desc') {
+            filtered.sort((a, b) => b['Price'] - a['Price']);
+        }
+
+        renderProducts(filtered);
+    }
+</script>
+    <footer>
+        <p>&copy; 2025 Ennoah. All rights reserved.</p>
+    </footer>
+{% endblock %}
 </body>
 </html>
