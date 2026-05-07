@@ -1,0 +1,82 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<h1>Sales Reports</h1>
+
+<div class="card">
+        <h2>Best Sellers</h2>
+        <ol>
+        {% for product, units in best_sellers.items() %}
+            <li>{{ product }} — {{ units }} units</li>
+        {% endfor %}
+        </ol>
+</div>
+
+
+<div class="dashboard">
+
+
+    <div class="card">
+        <h2>Total Revenue</h2>
+        <p>${{ total_revenue }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Total Profit</h2>
+        <p>${{ total_profit }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Revenue by Location</h2>
+        <img src="data:image/png;base64,{{ chart_location }}">
+    </div>
+
+    <div class="card">
+        <h2>Revenue by Product</h2>
+        <img src="data:image/png;base64,{{ chart_product }}">
+    </div>
+
+    <div class="card">
+        <h2>Revenue Over Time</h2>
+        <img src="data:image/png;base64,{{ chart_time }}">
+    </div>
+
+    <div class="card">
+        <h2>Heatmap</h2>
+        <img src="data:image/png;base64,{{ heatmap }}">
+    </div>
+
+</div>
+<div class="dashboard-container">
+
+    <!-- Revenue by Location -->
+    <div class="dashboard-box">
+        <h3>Revenue by Location</h3>
+        <ul>
+            {% for location, revenue in revenue_by_location.items() %}
+                <li>{{ location }}: ${{ revenue }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Revenue by Product -->
+    <div class="dashboard-box">
+        <h3>Revenue by Product</h3>
+        <ul>
+            {% for product, revenue in revenue_by_product.items() %}
+                <li>{{ product }}: ${{ revenue }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Date-Based Trend Analysis -->
+    <div class="dashboard-box">
+        <h3>Date‑Based Trend Analysis</h3>
+        <p><strong>Peak Sales Day:</strong> {{ peak_day }}</p>
+        <p><strong>Slowest Day:</strong> {{ slow_day }}</p>
+    </div>
+
+</div>
+
+{% endblock %}

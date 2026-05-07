@@ -1,0 +1,87 @@
+<div id="top-bar">
+
+    <!-- HAMBURGER BUTTON -->
+    <div id="hamburger-btn" class="hamburger-btn">
+        <span class="hamburger-icon">☰</span>
+        <span class="hamburger-text">All</span>
+    </div>
+
+    <!-- LEFT SECTION -->
+    <div class="left-section">
+        <span class="hello">Hello, Elizabeth</span>
+    </div>
+
+    <!-- MIDDLE SECTION -->
+    <div class="middle-section">
+        <div class="nav-item rewards-link" onclick="window.location.href='{{ url_for('rewards') }}'">
+    <span>Rewards & Offers</span>
+	</div>
+       <div class="nav-item" onclick="window.location.href='{{ url_for('streaming') }}'">
+    <span>Streaming</span>
+	</div>
+        <div class="nav-item" onclick="window.location.href='{{ url_for('account') }}'">
+            <span class="icon">📧</span>
+            <span>Account & Lists</span>
+        </div>
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right-section">
+
+        <!-- HOME -->
+        <div class="nav-item home-link" onclick="window.location.href='{{ url_for('welcome') }}'">
+            <span>ShoppingCorner</span>
+        </div>
+
+        <!-- HISTORY -->
+        <div class="nav-item history-link" onclick="window.location.href='{{ url_for('history') }}'">
+            <span>Returns & Orders</span>
+        </div>
+
+	<div class="nav-item" onclick="window.location.href='{{ url_for('careers') }}'">
+    	<span>Careers</span>
+	</div>
+        <!-- CART -->
+        <div id="cart-button" onclick="window.location.href='/cart'">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-text">Cart</span>
+            <span id="cart-count">0</span>
+        </div>
+
+        <!-- CLEAR CART -->
+        <div class="cart-section">
+            <button id="clear-cart-btn" class="clear-cart-btn">EmptyCart</button>
+        </div>
+         <button class="logout-top-btn" onclick="window.location.href='/logout'">
+            Sign Out
+        </button>
+
+    </div> <!-- END RIGHT SECTION -->
+
+</div> <!-- END TOP BAR -->
+
+
+<!-- ⭐ SIDE MENU OUTSIDE TOP BAR ⭐ -->
+<div id="side-menu" class="side-menu">
+    <button id="close-side-menu" class="close-side-menu">✖</button>
+
+    <ul class="side-menu-list">
+       <li onclick="window.location.href='{{ url_for('rewards') }}'">Rewards & Offers</li>
+       <li onclick="window.location.href='{{ url_for('streaming') }}'">Streaming</li>
+       <li onclick="window.location.href='{{ url_for('account') }}'">Account & Lists</li>
+
+        <!-- ⭐ CLICKABLE SHOPPINGCORNER -->
+        <li onclick="window.location.href='{{ url_for('welcome') }}'">ShoppingCorner</li>
+        <li onclick="window.location.href='{{ url_for('history') }}'">Returns & Orders</li>
+	<li onclick="window.location.href='{{ url_for('careers') }}'">Careers</li>
+
+	<li onclick="window.location.href='{{ url_for('businessaccounts') }}'">BusinessAccounts</li>
+        <li onclick="window.location.href='{{ url_for('reports') }}'">Reports</li>
+        <li onclick="window.location.href='{{ url_for('poems') }}'">Poems</li>
+        <li onclick="window.location.href='{{ url_for('calendar') }}'">Calendar</li>
+	<li onclick="window.location.href='{{ url_for('diary') }}'">Diary</li>
+	<li onclick="window.location.href='{{ url_for('chat') }}'">ContactUs</li>
+	
+	
+    </ul>
+</div>

@@ -1,0 +1,149 @@
+{% extends "menu.html" %}
+{% block content %}
+
+<style>
+    .diary-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fffdf5;
+      padding: 24px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .entry {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 16px 0;
+    }
+
+    .entry:last-child {
+      border-bottom: none;
+    }
+
+    .date {
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .title {
+      font-size: 1.05rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .text {
+      white-space: pre-wrap;
+    }
+
+    .new-entry {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #ddd;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input[type="date"], input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #0056b3;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+</style>
+
+<div class="diary-container">
+    <h1>My Diary</h1>
+
+    <div id="entries">
+      <!-- Entries loaded from localStorage -->
+    </div>
+
+    <div class="new-entry">
+      <h2>Add New Entry</h2>
+
+      <label for="entry-date">Date</label>
+      <input type="date" id="entry-date">
+
+      <label for="entry-title">Title</label>
+      <input type="text" id="entry-title" placeholder="Entry title">
+
+      <label for="entry-text">Entry</label>
+      <textarea id="entry-text" rows="5" placeholder="Write your thoughts here..."></textarea>
+
+      <button onclick="addEntry()">Add to Diary</button>
+    </div>
+</div>
+
+<script>
+// Load saved entries on page load
+window.onload = function () {
+    let saved = JSON.parse(localStorage.getItem("diaryEntries")) || [];
+
+    // Fix old entries that do not have sortDate
+    saved = saved.map(entry => {
+        if (!entry.sortDate) {
+            if (entry.date && entry.date !== "No date") {
+                // Convert dd-Mmm-yyyy → ISO yyyy-mm-dd
+                const [day, mon, year] = entry.date.split("-");
+                const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                const monthIndex = months.indexOf(mon);
+
+                if (monthIndex !== -1) {
+                    const iso = new Date(year, monthIndex, day).toISOString().split("T")[0];
+                    entry.sortDate = iso;
+                } else {
+                    entry.sortDate = new Date().toISOString().split("T")[0];
+                }
+            } else {
+                entry.sortDate = new Date().toISOString().split("T")[0];
+            }
+        }
+        return entry;
+    });
+
+    // Save fixed entries back to localStorage
+    localStorage.setItem("diaryEntries", JSON.stringify(saved));
+
+    // Sort by newest date first
+    saved.sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
+
+    const entriesDiv = document.getElementById("entries");
+    entriesDiv.innerHTML = "";
+
+    saved.forEach(entry => {
+        const entryDiv = document.createElement("div");
+        entryDiv.className = "entry";
+        entryDiv.innerHTML = `
+            <div class="date">${entry.date}</div>
+            <div class="title">${entry.title}</div>
+            <div class="text">${entry.text}</div>
+        `;
+        entriesDiv.appendChild(entryDiv);
+    });
+};
+
+</script>
+
+{% endblock %}

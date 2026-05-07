@@ -1,0 +1,14 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<div class="thankyou-container">
+    <h1>Thank You for Shopping!</h1>
+    <p>Your order has been successfully placed.</p>
+
+    <button class="home-btn" onclick="window.location.href='{{ url_for('welcome') }}'">
+        Back to Home
+    </button>
+</div>
+
+{% endblock %}

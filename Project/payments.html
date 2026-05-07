@@ -1,0 +1,543 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<h2 class="payment-title">Your Payments</h2>
+
+<div class="payments-container">
+
+    <!-- LEFT: ADD NEW PAYMENT -->
+    <div class="add-payment">
+        <h3>Add a New Payment Method</h3>
+        <button class="pay-btn" id="openAddCardModal">Add Credit or Debit Card</button>
+        <button class="pay-btn">Add Bank Account</button>
+        <button class="pay-btn">Add Wallet</button>
+
+    </div>
+<!-- BANK ACCOUNT MODAL -->
+<div class="modal-overlay" id="bankModal">
+    <div class="modal">
+        <h3>Add Bank Account</h3>
+
+        <label>Account Holder Name</label>
+        <input type="text" id="bankName">
+
+        <label>Account Number</label>
+        <input type="text" id="bankNumber" placeholder="1234567890">
+
+        <label>Routing Number</label>
+        <input type="text" id="bankRouting" placeholder="987654321">
+
+        <div class="default-row">
+            <input type="checkbox" id="bankDefault">
+            <label for="bankDefault">Set as default payment method</label>
+        </div>
+
+        <div class="modal-actions">
+            <button class="pay-btn" id="saveBankBtn">Save Bank</button>
+            <button class="cancel-btn" id="closeBankModal">Cancel</button>
+        </div>
+
+        <p class="error-msg" id="bankError"></p>
+    </div>
+</div>
+
+<!-- WALLET MODAL -->
+<div class="modal-overlay" id="walletModal">
+    <div class="modal">
+        <h3>Add Wallet</h3>
+
+        <label>Wallet Name</label>
+        <input type="text" id="walletName" placeholder="PayPal, Apple Pay, etc.">
+
+        <label>Wallet ID / Email</label>
+        <input type="text" id="walletID" placeholder="your@email.com">
+
+        <div class="default-row">
+            <input type="checkbox" id="walletDefault">
+            <label for="walletDefault">Set as default payment method</label>
+        </div>
+
+        <div class="modal-actions">
+            <button class="pay-btn" id="saveWalletBtn">Save Wallet</button>
+            <button class="cancel-btn" id="closeWalletModal">Cancel</button>
+        </div>
+
+        <p class="error-msg" id="walletError"></p>
+    </div>
+</div>
+
+    <!-- RIGHT: EXISTING PAYMENT METHODS -->
+    <div class="saved-payments">
+        <h3>Saved Payment Methods</h3>
+        <div id="savedCardsContainer"></div>
+    </div>
+
+</div>
+
+<!-- MODAL FOR ADDING CARD -->
+<div class="modal-overlay" id="cardModal">
+    <div class="modal">
+        <h3>Add Card</h3>
+
+        <label>Cardholder Name</label>
+        <input type="text" id="cardName">
+
+        <label>Card Number</label>
+        <input type="text" id="cardNumber" placeholder="1111 2222 3333 4444">
+
+        <label>Expiry (MM/YY)</label>
+        <input type="text" id="cardExpiry" placeholder="08/27">
+
+        <label>CVV</label>
+        <input type="password" id="cardCVV" placeholder="123">
+
+        <div class="default-row">
+            <input type="checkbox" id="cardDefault">
+            <label for="cardDefault">Set as default payment method</label>
+        </div>
+
+        <div class="modal-actions">
+            <button class="pay-btn" id="saveCardBtn">Save Card</button>
+            <button class="cancel-btn" id="closeCardModal">Cancel</button>
+        </div>
+
+        <p class="error-msg" id="cardError"></p>
+    </div>
+
+</div>
+<!-- GIFT CARD BALANCE -->
+<div class="giftcard-section">
+    <h3>Gift Card Balance</h3>
+
+    <div class="giftcard-box">
+        <p><strong>Current Balance:</strong> $<span id="giftBalance">0.00</span></p>
+
+        <input type="text" id="giftCode" placeholder="Enter gift card code">
+        <input type="number" id="giftAmount" placeholder="Amount to add">
+
+        <button class="pay-btn" id="addGiftBalance">Add to Balance</button>
+    </div>
+</div>
+
+<!-- MEMBERSHIP / REWARDS BALANCE -->
+<div class="membership-section">
+    <h3>Membership Rewards</h3>
+
+    <div class="membership-box">
+        <p><strong>Reward Points:</strong> <span id="rewardPoints">0</span> pts</p>
+
+        <input type="number" id="rewardAdd" placeholder="Add points">
+        <button class="pay-btn" id="addRewardPoints">Add Points</button>
+    </div>
+</div>
+<script>
+    // ---- LocalStorage key ----
+    const STORAGE_KEY = 'ennoah_cards';
+
+    // ---- Elements ----
+    const openModalBtn = document.getElementById('openAddCardModal');
+    const closeModalBtn = document.getElementById('closeCardModal');
+    const modal = document.getElementById('cardModal');
+    const saveCardBtn = document.getElementById('saveCardBtn');
+    const errorMsg = document.getElementById('cardError');
+    const savedCardsContainer = document.getElementById('savedCardsContainer');
+
+    const cardNameInput = document.getElementById('cardName');
+    const cardNumberInput = document.getElementById('cardNumber');
+    const cardExpiryInput = document.getElementById('cardExpiry');
+    const cardCVVInput = document.getElementById('cardCVV');
+    const cardDefaultInput = document.getElementById('cardDefault');
+
+    // ---- Helpers ----
+    function loadCards() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveCards(cards) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+    }
+
+    function maskCardNumber(num) {
+        const digits = num.replace(/\D/g, '');
+        if (digits.length < 4) return '****';
+        return '**** **** **** ' + digits.slice(-4);
+    }
+
+    function detectBrand(num) {
+        const n = num.replace(/\D/g, '');
+        if (/^4/.test(n)) return 'Visa';
+        if (/^5[1-5]/.test(n)) return 'Mastercard';
+        if (/^3[47]/.test(n)) return 'Amex';
+        return 'Card';
+    }
+
+    function renderCards() {
+        const cards = loadCards();
+        savedCardsContainer.innerHTML = '';
+
+        if (cards.length === 0) {
+            savedCardsContainer.innerHTML = '<p>No saved payment methods yet.</p>';
+            return;
+        }
+
+        cards.forEach((card, index) => {
+            const div = document.createElement('div');
+            div.className = 'payment-card';
+
+            const brand = detectBrand(card.number);
+
+            div.innerHTML = `
+                <p><strong>${brand} ending in ${card.number.slice(-4)}</strong> ${card.default ? '<span class="default-badge">Default</span>' : ''}</p>
+                <p>${maskCardNumber(card.number)}</p>
+                <p>Expires ${card.expiry}</p>
+                <div class="card-actions">
+                    <button class="small-btn" onclick="setDefaultCard(${index})">Set as default</button>
+                    <button class="remove-btn" onclick="removeCard(${index})">Remove</button>
+                </div>
+            `;
+
+            savedCardsContainer.appendChild(div);
+        });
+    }
+
+    // ---- Validation ----
+    function validateCard() {
+        const name = cardNameInput.value.trim();
+        const number = cardNumberInput.value.replace(/\s+/g, '');
+        const expiry = cardExpiryInput.value.trim();
+        const cvv = cardCVVInput.value.trim();
+
+        if (!name || !number || !expiry || !cvv) {
+            return 'All fields are required.';
+        }
+        if (!/^\d{16}$/.test(number)) {
+            return 'Card number must be 16 digits.';
+        }
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            return 'Expiry must be in MM/YY format.';
+        }
+        if (!/^\d{3,4}$/.test(cvv)) {
+            return 'CVV must be 3 or 4 digits.';
+        }
+        return '';
+    }
+
+    // ---- Modal controls ----
+    function openModal() {
+        errorMsg.textContent = '';
+        cardNameInput.value = '';
+        cardNumberInput.value = '';
+        cardExpiryInput.value = '';
+        cardCVVInput.value = '';
+        cardDefaultInput.checked = false;
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    openModalBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // ---- Save card ----
+    saveCardBtn.addEventListener('click', () => {
+        const error = validateCard();
+        if (error) {
+            errorMsg.textContent = error;
+            return;
+        }
+
+        const cards = loadCards();
+        const newCard = {
+            name: cardNameInput.value.trim(),
+            number: cardNumberInput.value.replace(/\s+/g, ''),
+            expiry: cardExpiryInput.value.trim(),
+            default: cardDefaultInput.checked
+        };
+
+        if (newCard.default) {
+            cards.forEach(c => c.default = false);
+        }
+
+        cards.push(newCard);
+        saveCards(cards);
+        renderCards();
+        closeModal();
+    });
+
+    // ---- Expose functions for buttons ----
+    window.removeCard = function(index) {
+        const cards = loadCards();
+        cards.splice(index, 1);
+        saveCards(cards);
+        renderCards();
+    }
+
+    window.setDefaultCard = function(index) {
+        const cards = loadCards();
+        cards.forEach((c, i) => c.default = (i === index));
+        saveCards(cards);
+        renderCards();
+    }
+
+    // ---- Initial render ----
+    renderCards();
+// ---- Gift Card & Rewards Storage Keys ----
+const GIFT_KEY = 'ennoah_gift_balance';
+const REWARD_KEY = 'ennoah_reward_points';
+
+// ---- Load balances ----
+function loadGiftBalance() {
+    return parseFloat(localStorage.getItem(GIFT_KEY)) || 0;
+}
+
+function loadRewardPoints() {
+    return parseInt(localStorage.getItem(REWARD_KEY)) || 0;
+}
+
+// ---- Render balances ----
+function renderBalances() {
+    document.getElementById('giftBalance').textContent = loadGiftBalance().toFixed(2);
+    document.getElementById('rewardPoints').textContent = loadRewardPoints();
+}
+
+// ---- Add to gift card balance ----
+document.getElementById('addGiftBalance').addEventListener('click', () => {
+    const amount = parseFloat(document.getElementById('giftAmount').value);
+    const code = document.getElementById('giftCode').value.trim();
+
+    if (!code) {
+        alert("Enter a valid gift card code");
+        return;
+    }
+
+    if (!amount || amount <= 0) {
+        alert("Enter a valid amount");
+        return;
+    }
+
+    let current = loadGiftBalance();
+    current += amount;
+
+    localStorage.setItem(GIFT_KEY, current);
+    renderBalances();
+
+    document.getElementById('giftAmount').value = '';
+    document.getElementById('giftCode').value = '';
+});
+
+// ---- Add reward points ----
+document.getElementById('addRewardPoints').addEventListener('click', () => {
+    const pts = parseInt(document.getElementById('rewardAdd').value);
+
+    if (!pts || pts <= 0) {
+        alert("Enter valid points");
+        return;
+    }
+
+    let current = loadRewardPoints();
+    current += pts;
+
+    localStorage.setItem(REWARD_KEY, current);
+    renderBalances();
+
+    document.getElementById('rewardAdd').value = '';
+});
+
+
+// Buttons
+const openBankBtn = document.querySelector('.pay-btn:nth-of-type(2)');
+const openWalletBtn = document.querySelector('.pay-btn:nth-of-type(3)');
+
+const bankModal = document.getElementById('bankModal');
+const walletModal = document.getElementById('walletModal');
+
+const closeBankModal = document.getElementById('closeBankModal');
+const closeWalletModal = document.getElementById('closeWalletModal');
+
+// Open modals
+openBankBtn.addEventListener('click', () => bankModal.style.display = 'flex');
+openWalletBtn.addEventListener('click', () => walletModal.style.display = 'flex');
+
+// Close modals
+closeBankModal.addEventListener('click', () => bankModal.style.display = 'none');
+closeWalletModal.addEventListener('click', () => walletModal.style.display = 'none');
+
+// Close when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === bankModal) bankModal.style.display = 'none';
+    if (e.target === walletModal) walletModal.style.display = 'none';
+});
+// ---- Initial load ----
+// Storage key for bank + wallet
+const BANK_KEY = 'ennoah_bank_accounts';
+const WALLET_KEY = 'ennoah_wallets';
+
+// Loaders
+function loadBanks() {
+    return JSON.parse(localStorage.getItem(BANK_KEY)) || [];
+}
+function loadWallets() {
+    return JSON.parse(localStorage.getItem(WALLET_KEY)) || [];
+}
+
+// Savers
+function saveBanks(banks) {
+    localStorage.setItem(BANK_KEY, JSON.stringify(banks));
+}
+function saveWallets(wallets) {
+    localStorage.setItem(WALLET_KEY, JSON.stringify(wallets));
+}
+const saveBankBtn = document.getElementById('saveBankBtn');
+const bankError = document.getElementById('bankError');
+
+saveBankBtn.addEventListener('click', () => {
+    const name = document.getElementById('bankName').value.trim();
+    const number = document.getElementById('bankNumber').value.trim();
+    const routing = document.getElementById('bankRouting').value.trim();
+    const isDefault = document.getElementById('bankDefault').checked;
+
+    if (!name || !number || !routing) {
+        bankError.textContent = "All fields are required.";
+        return;
+    }
+
+    if (!/^\d{9,18}$/.test(number)) {
+        bankError.textContent = "Account number must be 9–18 digits.";
+        return;
+    }
+
+    if (!/^\d{9}$/.test(routing)) {
+        bankError.textContent = "Routing number must be 9 digits.";
+        return;
+    }
+
+    let banks = loadBanks();
+
+    if (isDefault) {
+        banks.forEach(b => b.default = false);
+    }
+
+    banks.push({
+        name,
+        number,
+        routing,
+        default: isDefault
+    });
+
+    saveBanks(banks);
+    bankModal.style.display = 'none';
+    renderCards(); // reuse your existing card renderer
+});
+
+const saveWalletBtn = document.getElementById('saveWalletBtn');
+const walletError = document.getElementById('walletError');
+
+saveWalletBtn.addEventListener('click', () => {
+    const name = document.getElementById('walletName').value.trim();
+    const id = document.getElementById('walletID').value.trim();
+    const isDefault = document.getElementById('walletDefault').checked;
+
+    if (!name || !id) {
+        walletError.textContent = "All fields are required.";
+        return;
+    }
+
+    let wallets = loadWallets();
+
+    if (isDefault) {
+        wallets.forEach(w => w.default = false);
+    }
+
+    wallets.push({
+        name,
+        id,
+        default: isDefault
+    });
+
+    saveWallets(wallets);
+    walletModal.style.display = 'none';
+    renderCards();
+});
+// Render bank accounts
+const banks = loadBanks();
+banks.forEach((bank, index) => {
+    const div = document.createElement('div');
+    div.className = 'payment-card';
+
+    div.innerHTML = `
+        <p><strong>Bank Account (${bank.name})</strong> ${bank.default ? '<span class="default-badge">Default</span>' : ''}</p>
+        <p>Account ending in ${bank.number.slice(-4)}</p>
+        <p>Routing: ${bank.routing}</p>
+
+        <div class="card-actions">
+            <button class="small-btn" onclick="setDefaultBank(${index})">Set Default</button>
+            <button class="remove-btn" onclick="removeBank(${index})">Remove</button>
+        </div>
+    `;
+
+    savedCardsContainer.appendChild(div);
+});
+
+// Render wallets
+const wallets = loadWallets();
+wallets.forEach((wallet, index) => {
+    const div = document.createElement('div');
+    div.className = 'payment-card';
+
+    div.innerHTML = `
+        <p><strong>${wallet.name}</strong> ${wallet.default ? '<span class="default-badge">Default</span>' : ''}</p>
+        <p>ID: ${wallet.id}</p>
+
+        <div class="card-actions">
+            <button class="small-btn" onclick="setDefaultWallet(${index})">Set Default</button>
+            <button class="remove-btn" onclick="removeWallet(${index})">Remove</button>
+        </div>
+    `;
+
+    savedCardsContainer.appendChild(div);
+});
+
+window.removeBank = function(index) {
+    let banks = loadBanks();
+    banks.splice(index, 1);
+    saveBanks(banks);
+    renderCards();
+}
+
+window.setDefaultBank = function(index) {
+    let banks = loadBanks();
+    banks.forEach((b, i) => b.default = (i === index));
+    saveBanks(banks);
+    renderCards();
+}
+
+window.removeWallet = function(index) {
+    let wallets = loadWallets();
+    wallets.splice(index, 1);
+    saveWallets(wallets);
+    renderCards();
+}
+
+window.setDefaultWallet = function(index) {
+    let wallets = loadWallets();
+    wallets.forEach((w, i) => w.default = (i === index));
+    saveWallets(wallets);
+    renderCards();
+}
+
+// ---- Initial load ----
+renderBalances();
+</script>
+
+
+{% endblock %}
+
+

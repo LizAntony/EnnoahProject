@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <title>Centered Video</title>
+  <style>
+ .video-container {
+      display: flex;
+      justify-content: center; /* horizontal center */
+      align-items: center;     /* vertical center */
+      height: 60vh;           /* full viewport height */
+      background-color: ivory; /* optional background */
+    }
+    iframe {
+      width: 640px;
+      height: 360px;
+      border: none;
+    }
+
+body {background-color: ivory;}
+h2   {color: green;}
+p    {color: purple;}
+table, th, td {
+  border:0 px solid black;
+}
+<style>
+  .dress-collections {
+    font-family: "Playfair Display", Georgia, serif;
+    color: #1f1f1f;
+    max-width: 980px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .header-bar h2 {
+    font-style: italic;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .homepage-link a {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #2b2b2b;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #d3b58a;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .homepage-link a:hover {
+    background: #d3b58a;
+    color: #fff;
+  }
+
+  .dress-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .dress-table th,
+  .dress-table td {
+    padding: 0.85rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: middle;
+  }
+  .dress-table tbody tr:hover {
+    background: #fcfcfc;
+  }
+  .dress-table thead th {
+    background: #faf8f6;
+    font-weight: 700;
+  }
+
+  .dress-img {
+    width: 100px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+  }
+
+  .dress-img:hover {
+    transform: scale(1.05);
+  }
+
+  .dress-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+  }
+
+  .dress-list li {
+    padding: 0.4rem 0;
+  }
+
+  .dress-list li:last-child {
+    border-bottom: none;
+  }
+.dress-gallery {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .dress-gallery td {
+    padding: 0.75rem;
+    vertical-align: top;
+  }
+
+ 
+.gallery-img {
+    width: 100px;   /* set consistent width */
+    height: 180px;  /* set consistent height */
+    object-fit: cover; /* ensures images scale nicely */
+    display: block;
+    margin: 0 auto;
+  }
+
+
+  .gallery-img:hover {
+    transform: scale(1.05);
+  }
+
+</style>
+
+</style>
+</head>
+<body>
+  {% block content %}{% endblock %}
+
+    <footer>
+        <p>&copy; 2025 Ennoah. All rights reserved.</p>
+    </footer>
+<section class="dress-collections">
+  <div class="header-bar">
+    <h2>Women’s Dress Collections</h2>
+    <div class="homepage-link">
+      <a href="welcome">HomePage</a>
+    </div>
+  </div>
+  <table class="dress-gallery">
+    <tr>
+<td><img src="{{ url_for('static', filename='images/evening.jpg') }}" 
+     alt="Evening Dress" class="gallery-img"></td>
+<td><img src="{{ url_for('static', filename='images/casual.jpg') }}" 
+     alt="Casual Dress" class="gallery-img"></td>
+<td><img src="{{ url_for('static', filename='images/cocktail.jpg') }}" 
+     alt="Cocktail Dress" class="gallery-img"></td>
+<td><img src="{{ url_for('static', filename='images/Maxi.jpg') }}" 
+     alt="Maxi Dress" class="gallery-img"></td>
+<td><img src="{{ url_for('static', filename='images/formal.jpg') }}" 
+     alt="Formal Dress" class="gallery-img"></td>
+      
+    </tr>
+    <tr>
+      <td>Evening Gown</td>
+      <td>Casual Dress</td>
+      <td>Cocktail Dress</td>
+      <td>Maxi Dress</td>
+      <td>Formal Dress</td>
+    </tr>
+  </table>
+<div class = video-container>
+<iframe 
+  src="https://player.vimeo.com/video/349059179" 
+  width="640" height="360" 
+  frameborder="0" 
+  allow="autoplay; fullscreen; picture-in-picture" 
+  allowfullscreen>
+</iframe>
+</div>
+  <!-- Dress Collections Table -->
+  <table class="dress-table">
+    <thead>
+      <tr>
+        <th>Collection</th>
+        <th>Style</th>
+        <th>Material</th>
+        <th>Price Range</th>
+        <th>Key Features</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Elegant Evenings</td>
+        <td>Evening Gown</td>
+        <td>Silk & Satin</td>
+        <td>$180–$350</td>
+        <td>Floor-length, embellished neckline, flowing silhouette</td>
+      </tr>
+      <tr>
+        <td>Daylight Charm</td>
+        <td>Casual Dress</td>
+        <td>Cotton & Linen</td>
+        <td>$60–$120</td>
+        <td>Breathable fabric, relaxed fit, pastel tones</td>
+      </tr>
+      <tr>
+        <td>Midnight Spark</td>
+        <td>Cocktail Dress</td>
+        <td>Velvet & Sequins</td>
+        <td>$140–$280</td>
+        <td>Knee-length, fitted waist, shimmering accents</td>
+      </tr>
+      <tr>     
+        <td>Summer Breeze</td>
+        <td>Maxi Dress</td>
+        <td>Chiffon</td>
+        <td>$90–$160</td>
+        <td>Lightweight, floral prints, flowing hemline</td>
+      </tr>
+      <tr>
+        <td>Graceful Workdays</td>
+        <td>Formal Dress</td>
+        <td>Poly-blend</td>
+        <td>$100–$200</td>
+        <td>Structured cut, tailored fit, neutral palette</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Dress Categories List -->
+  <h3>Shop by Category</h3>
+  <ul class="dress-list">
+    <li><strong>Evening Gowns:</strong> Elegant, floor-length sophistication</li>
+    <li><strong>Casual Dresses:</strong> Comfortable everyday wear</li>
+    <li><strong>Cocktail Dresses:</strong> Chic party-ready silhouettes</li>
+    <li><strong>Maxi Dresses:</strong> Breezy, flowing summer essentials</li>
+    <li><strong>Formal Dresses:</strong> Professional, polished looks</li>
+  </ul>
+
+</section>
+
+</body>
+</html>

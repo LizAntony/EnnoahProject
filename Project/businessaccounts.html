@@ -1,0 +1,272 @@
+{% extends "menu.html" %}
+{% block content %}
+
+<style>
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card-btn {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.card-btn:hover {
+    background: #f0f7ff;
+    border-color: #0a66c2;
+    transform: translateY(-2px);
+}
+
+.card-btn.active {
+    background: #0a66c2;
+    color: white;
+    border-color: #0a66c2;
+}
+
+.section {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.active-section {
+    display: block;
+}
+</style>
+
+<div class="card-grid">
+    <div class="card-btn" data-section="dashboard">📊 Dashboard</div>
+    <div class="card-btn" data-section="sales">🛒 Sales Summary</div>
+    <div class="card-btn" data-section="cogs">📉 COGS Report</div>
+    <div class="card-btn" data-section="inventory">📦 Inventory</div>
+    <div class="card-btn" data-section="collection">💵 Cash Collection</div>
+    <div class="card-btn" data-section="gross">💰 Gross Profit</div>
+    <div class="card-btn" data-section="net">🧾 Net Income</div>
+    <div class="card-btn" data-section="income">📄 Income Statement</div>
+    <div class="card-btn" data-section="balance">📘 Balance Sheet</div>
+    <div class="card-btn" data-section="cashflow">💧 Cash Flow</div>
+    <div class="card-btn" data-section="stakeholders">👥 Stakeholders</div>
+    <div class="card-btn" data-section="charts">📈 Charts</div>
+</div>
+<div id="dashboard" class="section">
+    <h2>📊 Dashboard</h2>
+    <p>Total Sales: <span id="d-sales"></span></p>
+    <p>Total COGS: <span id="d-cogs"></span></p>
+    <p>Gross Profit: <span id="d-gross"></span></p>
+    <p>Net Income: <span id="d-net"></span></p>
+</div>
+
+<div id="sales" class="section">
+    <h2>🛒 Sales Summary</h2>
+    <table border="1" width="100%">
+        <thead><tr><th>Item</th><th>Qty</th><th>Sales</th></tr></thead>
+        <tbody id="sales-table"></tbody>
+    </table>
+</div>
+
+<div id="cogs" class="section">
+    <h2>📉 COGS Report</h2>
+    <table border="1" width="100%">
+        <thead><tr><th>Item</th><th>Qty</th><th>COGS</th></tr></thead>
+        <tbody id="cogs-table"></tbody>
+    </table>
+</div>
+
+<div id="inventory" class="section">
+    <h2>📦 Inventory</h2>
+    <table border="1" width="100%">
+        <thead><tr><th>Item</th><th>Qty Sold</th><th>Remaining</th></tr></thead>
+        <tbody id="inventory-table"></tbody>
+    </table>
+</div>
+
+<div id="collection" class="section">
+    <h2>💵 Cash Collection</h2>
+    <p>Total Cash Collected: <span id="cash-collected"></span></p>
+</div>
+
+<div id="gross" class="section">
+    <h2>💰 Gross Profit</h2>
+    <p>Gross Profit: <span id="gross-profit"></span></p>
+</div>
+
+<div id="net" class="section">
+    <h2>🧾 Net Income</h2>
+    <p>Net Income: <span id="net-income"></span></p>
+</div>
+
+<div id="income" class="section">
+    <h2>📄 Income Statement</h2>
+    <table border="1" width="100%">
+        <tr><td>Revenue</td><td id="is-revenue"></td></tr>
+        <tr><td>COGS</td><td id="is-cogs"></td></tr>
+        <tr><td>Gross Profit</td><td id="is-gross"></td></tr>
+        <tr><td>Expenses</td><td id="is-expenses"></td></tr>
+        <tr><td><b>Net Income</b></td><td id="is-net"></td></tr>
+    </table>
+</div>
+
+<div id="balance" class="section">
+    <h2>📘 Balance Sheet</h2>
+    <table border="1" width="100%">
+        <tr><td>Cash</td><td id="bs-cash"></td></tr>
+        <tr><td>Inventory</td><td id="bs-inventory"></td></tr>
+        <tr><td>Equity</td><td id="bs-equity"></td></tr>
+    </table>
+</div>
+
+<div id="cashflow" class="section">
+    <h2>💧 Cash Flow</h2>
+    <table border="1" width="100%">
+        <tr><td>Cash In</td><td id="cf-in"></td></tr>
+        <tr><td>Cash Out</td><td id="cf-out"></td></tr>
+        <tr><td><b>Net Cash Flow</b></td><td id="cf-net"></td></tr>
+    </table>
+</div>
+
+<div id="stakeholders" class="section">
+    <h2>👥 Stakeholders</h2>
+    <p>Customers, Suppliers, Owner, Employees</p>
+</div>
+
+<div id="charts" class="section">
+    <h2>📈 Charts</h2>
+    <canvas id="salesChart"></canvas>
+</div>
+<script>
+const prices = {
+    "Garden Fresh": 4.99,
+    "Morning Glow Smoothie": 5.99,
+    "Ocean Vitality Grilled Fish": 12.49,
+    "Wholesome Bowl Quinoa": 8.99,
+    "Comfort Nourish Soup": 6.49
+};
+
+const costs = {
+    "Garden Fresh": 2.00,
+    "Morning Glow Smoothie": 2.50,
+    "Ocean Vitality Grilled Fish": 6.00,
+    "Wholesome Bowl Quinoa": 3.00,
+    "Comfort Nourish Soup": 1.80
+};
+
+const expenses = 25;
+
+function loadReports() {
+    const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+
+    let totalSales = 0;
+    let totalCOGS = 0;
+    let qty = {};
+
+    history.forEach(order => {
+        order.items.forEach(i => {
+            qty[i.name] = (qty[i.name] || 0) + i.qty;
+            totalSales += prices[i.name] * i.qty;
+            totalCOGS += costs[i.name] * i.qty;
+        });
+    });
+
+    const gross = totalSales - totalCOGS;
+    const net = gross - expenses;
+
+    // Dashboard
+    document.getElementById("d-sales").textContent = "$" + totalSales.toFixed(2);
+    document.getElementById("d-cogs").textContent = "$" + totalCOGS.toFixed(2);
+    document.getElementById("d-gross").textContent = "$" + gross.toFixed(2);
+    document.getElementById("d-net").textContent = "$" + net.toFixed(2);
+
+    // Sales table
+    const sTable = document.getElementById("sales-table");
+    sTable.innerHTML = "";
+    Object.keys(qty).forEach(name => {
+        sTable.innerHTML += `<tr>
+            <td>${name}</td>
+            <td>${qty[name]}</td>
+            <td>$${(qty[name] * prices[name]).toFixed(2)}</td>
+        </tr>`;
+    });
+
+    // COGS table
+    const cTable = document.getElementById("cogs-table");
+    cTable.innerHTML = "";
+    Object.keys(qty).forEach(name => {
+        cTable.innerHTML += `<tr>
+            <td>${name}</td>
+            <td>${qty[name]}</td>
+            <td>$${(qty[name] * costs[name]).toFixed(2)}</td>
+        </tr>`;
+    });
+
+    // Inventory
+    const iTable = document.getElementById("inventory-table");
+    iTable.innerHTML = "";
+    Object.keys(qty).forEach(name => {
+        iTable.innerHTML += `<tr>
+            <td>${name}</td>
+            <td>${qty[name]}</td>
+            <td>—</td>
+        </tr>`;
+    });
+
+    // Cash Collection
+    document.getElementById("cash-collected").textContent = "$" + totalSales.toFixed(2);
+
+    // Gross Profit
+    document.getElementById("gross-profit").textContent = "$" + gross.toFixed(2);
+
+    // Net Income
+    document.getElementById("net-income").textContent = "$" + net.toFixed(2);
+
+    // Income Statement
+    document.getElementById("is-revenue").textContent = "$" + totalSales.toFixed(2);
+    document.getElementById("is-cogs").textContent = "$" + totalCOGS.toFixed(2);
+    document.getElementById("is-gross").textContent = "$" + gross.toFixed(2);
+    document.getElementById("is-expenses").textContent = "$" + expenses.toFixed(2);
+    document.getElementById("is-net").textContent = "$" + net.toFixed(2);
+
+    // Balance Sheet
+    document.getElementById("bs-cash").textContent = "$" + totalSales.toFixed(2);
+    document.getElementById("bs-inventory").textContent = "$0.00";
+    document.getElementById("bs-equity").textContent = "$" + net.toFixed(2);
+
+    // Cash Flow
+    document.getElementById("cf-in").textContent = "$" + totalSales.toFixed(2);
+    document.getElementById("cf-out").textContent = "$" + (totalCOGS + expenses).toFixed(2);
+    document.getElementById("cf-net").textContent = "$" + (totalSales - totalCOGS - expenses).toFixed(2);
+}
+
+// CARD BUTTON SWITCHING
+const cardButtons = document.querySelectorAll(".card-btn");
+const sections = document.querySelectorAll(".section");
+
+cardButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        cardButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        sections.forEach(sec => sec.classList.remove("active-section"));
+
+        const target = btn.getAttribute("data-section");
+        document.getElementById(target).classList.add("active-section");
+    });
+});
+
+document.addEventListener("DOMContentLoaded", loadReports);
+</script>
+
+{% endblock %}

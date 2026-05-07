@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="menu-page">
+
+    {% include 'topbar.html' %}
+
+<div class="page-container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+    <script src="{{ url_for('static', filename='cart.js') }}"></script>
+<footer class="ennoah-footer">
+
+    <div class="footer-columns">
+
+        <div class="footer-col">
+            <h4>Get Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Live Chat</a>
+            <a href="#">Order Status</a>
+            <a href="#">Refunds</a>
+            <a href="#">Report an Issue</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Payments & Protection</h4>
+            <a href="#">Secure Payments</a>
+            <a href="#">Money‑Back Policy</a>
+            <a href="#">Shipping Protection</a>
+            <a href="#">After‑Sales Support</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Explore Ennoah</h4>
+            <a href="/goodfood">NutriDelish Foods</a>
+            <a href="/StylishClothing">Elegant Clothing</a>
+            <a href="/Bags">Designer Bags</a>
+            <a href="/Stories">Inspiring Stories</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Sell With Us</h4>
+            <a href="#">Become a Partner</a>
+            <a href="#">Vendor Program</a>
+            <a href="#">Affiliate Opportunities</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>About Ennoah</h4>
+            <a href="#">Our Story</a>
+            <a href="#">Responsibility</a>
+            <a href="#">News & Updates</a>
+            <a href="{{ url_for('careers') }}">Careers</a>
+        </div>
+
+    </div>
+<div class="back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+    Back to top
+</div>
+<div class="footer-bottom">
+    <div class="social-icons">
+        <span>Stay Connected:</span>
+
+        <a href="#"><img src="{{ url_for('static', filename='images/facebook-icon.png') }}"></a>
+        <a href="#"><img src="{{ url_for('static', filename='images/instagram-icon.png') }}"></a>
+        <a href="#"><img src="{{ url_for('static', filename='images/twitter-icon.png') }}"></a>
+        <a href="#"><img src="{{ url_for('static', filename='images/youtube-icon.png') }}"></a>
+    </div>
+
+    <p>&copy; 2025 Ennoah. All rights reserved.</p>
+</div>
+<div class="payment-section">
+    <h4>We Accept</h4>
+    <div class="payment-icons">
+        <img src="{{ url_for('static', filename='payments/mastercard.png') }}" alt="Mastercard">
+        <img src="{{ url_for('static', filename='payments/visa.png') }}" alt="Visa">
+        <img src="{{ url_for('static', filename='payments/amex.png') }}" alt="American Express">
+        <img src="{{ url_for('static', filename='payments/paypal.png') }}" alt="PayPal">
+        <img src="{{ url_for('static', filename='payments/applepay.png') }}" alt="Apple Pay">
+        <img src="{{ url_for('static', filename='payments/googlepay.png') }}" alt="Google Pay">
+        <img src="{{ url_for('static', filename='payments/discover.png') }}" alt="Discover">
+    </div>
+</div>
+<div class="ecosystem-footer">
+
+    <div class="eco-col">
+        <h5>Ennoah Foods</h5>
+        <p>Wholesome meals crafted with care</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Fashion</h5>
+        <p>Elegant clothing for every style</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Bags</h5>
+        <p>Designer accessories for daily life</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Stories</h5>
+        <p>Inspiring tales to enrich your mind</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Business</h5>
+        <p>Tools & services for small brands</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Global</h5>
+        <p>Shipping & delivery worldwide</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Home Services</h5>
+        <p>Trusted professionals for your home</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Cloud</h5>
+        <p>Secure hosting & digital storage</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Books</h5>
+        <p>Reviews, recommendations & more</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Deals</h5>
+        <p>Daily offers & exclusive savings</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Renewed</h5>
+        <p>Refurbished products you can trust</p>
+    </div>
+
+    <div class="eco-col">
+        <h5>Ennoah Security</h5>
+        <p>Smart home protection systems</p>
+    </div>
+
+</div>
+<div class="legal-footer">
+    <a href="#">Terms of Service</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Sitemap</a>
+    <a href="#">Your Privacy Choices</a>
+</div>
+</footer>
+	
+</body>
+</html>

@@ -1,0 +1,102 @@
+{% extends "menu.html" %}
+{% block content %}
+
+<h1>Schedule Calendar</h1>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<div id='calendar'></div>
+
+{% raw %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        height: 'auto',
+        selectable: true,
+        editable: true,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: '/calendar_events',
+
+        dateClick: function(info) {
+    let title = prompt("Enter event title");
+    if (title) {
+let newEvent = {
+    id: Date.now().toString(),   // ⭐ unique ID
+    title: title,
+    start: info.date,
+    allDay: info.allDay
+};
+
+        calendar.addEvent(newEvent);
+
+        fetch("/add_event", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newEvent)
+        });
+    }
+},
+eventDrop: function(info) {
+    updateEvent(info.event);
+},
+
+eventResize: function(info) {
+    updateEvent(info.event);
+},
+
+
+        eventClick: function(info) {
+            if (confirm("Delete this event?")) {
+
+                // Remove from UI
+                info.event.remove();
+
+                // Remove from backend
+                fetch("/delete_event", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: info.event.id })
+                });
+            }
+        }
+    });
+
+function updateEvent(event) {
+    fetch("/update_event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            id: event.id,
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            allDay: event.allDay
+        })
+    });
+}
+
+    calendar.render();
+});
+</script>
+{% endraw %}
+
+<style>
+#calendar {
+    max-width: 1100px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+</style>
+
+{% endblock %}

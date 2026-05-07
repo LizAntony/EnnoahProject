@@ -1,0 +1,46 @@
+{% extends "menu.html" %}
+{% block content %}
+
+<h1>Poem Feed</h1>
+<div id="feed"></div>
+<p id="loading" style="display:none;">Loading...</p>
+
+{% raw %}
+<script>
+let page = 1;
+let loading = false;
+let hasMore = true;
+
+async function loadMorePoems() {
+    if (loading || !hasMore) return;
+    loading = true;
+    document.getElementById("loading").style.display = "block";
+
+    const res = await fetch(`/poems_chunk?page=${page}`);
+    const data = await res.json();
+
+    const feed = document.getElementById("feed");
+    data.poems.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "poem-card";
+        card.innerHTML = `<h3>${p.title}</h3><p>${p.text}</p>`;
+        feed.appendChild(card);
+    });
+
+    hasMore = data.has_more;
+    page += 1;
+    loading = false;
+    document.getElementById("loading").style.display = "none";
+}
+
+window.addEventListener("scroll", () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+        loadMorePoems();
+    }
+});
+
+loadMorePoems();
+</script>
+{% endraw %}
+
+{% endblock %}

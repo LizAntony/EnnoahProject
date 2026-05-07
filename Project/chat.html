@@ -1,0 +1,238 @@
+{% extends "menu.html" %}
+{% block content %}
+
+<style>
+/* RESET + BASE */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.email-container {
+    display: flex;
+    height: 100vh;
+    font-family: Segoe UI, Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.email-sidebar {
+    width: 240px;
+    background: #f3f3f3;
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.email-sidebar h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.email-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.email-sidebar li {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.email-sidebar li.active,
+.email-sidebar li:hover {
+    background: #d0e4ff;
+}
+
+/* MAIN PANEL */
+.email-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+/* HEADER */
+.email-header {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    background: #fafafa;
+}
+
+.email-header .row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.email-header label {
+    width: 70px;
+    font-weight: bold;
+}
+
+.email-header input,
+.email-header select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* MESSAGE THREAD */
+.email-thread {
+    flex: 1;
+    padding: 20px;
+    padding-right: 12px; /* aligns scrollbar */
+    overflow-y: auto;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* MESSAGE BUBBLES */
+.email-thread div {
+    background: #e8f1ff;          /* soft Outlook blue */
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border-left: 4px solid #0a66c2;  /* Outlook blue accent */
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+/* COMPOSE BOX */
+#messageText {
+    width: 100%;
+    height: 150px;
+    padding: 20px; /* matches thread padding */
+    font-size: 15px;
+    border: none;
+    border-top: 1px solid #ccc;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
+}
+
+/* BUTTONS */
+.email-actions {
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.email-actions button {
+    padding: 10px 20px;
+    background: #0a66c2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.email-actions button:hover {
+    background: #004a99;
+}
+.msg-status {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 6px 10px;
+    background: #e8f4ff;      /* highlight */
+    color: #0a66c2;            /* text color */
+    border-left: 4px solid #0a66c2;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+</style>
+
+<div class="email-container">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="email-sidebar">
+        <h3>Contacts</h3>
+        <ul>
+            <li class="active">Elizabeth</li>
+            <li>John</li>
+            <li>David</li>
+            <li>Mary</li>
+        </ul>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="email-main">
+
+        <!-- HEADER -->
+        <div class="email-header">
+            <div class="row">
+                <label>From:</label>
+                <input type="text" value="Elizabeth" readonly>
+            </div>
+
+            <div class="row">
+                <label>To:</label>
+                <select id="receiverSelect">
+                    <option value="John">John</option>
+                    <option value="David">David</option>
+                    <option value="Mary">Mary</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <label>Subject:</label>
+                <input type="text" id="subjectLine" placeholder="Enter subject...">
+            </div>
+        </div>
+
+       <!-- COMPOSE AREA (moved up) -->
+<textarea id="messageText" placeholder="Type your message..."></textarea>
+
+<!-- MESSAGE THREAD -->
+<div id="messages" class="email-thread"></div>
+
+<!-- BUTTONS -->
+<div class="email-actions">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+
+    </div>
+</div>
+
+<script>
+
+function sendMessage() {
+    const text = document.getElementById("messageText").value;
+    const receiver = document.getElementById("receiverSelect").value;
+
+    if (!text.trim()) return;
+
+    // Show on screen
+    const messages = document.getElementById("messages");
+    const div = document.createElement("div");
+    div.innerHTML = 
+    "Elizabeth → " + receiver + ": " + text + 
+    "<br><span class='msg-status'>Message Sent!</span>";
+
+
+    messages.appendChild(div);
+
+    // Send to backend
+    fetch("/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            sender: "Elizabeth",
+            receiver: receiver,
+            message: text
+        })
+    });
+
+    document.getElementById("messageText").value = "";
+}
+
+</script>
+
+{% endblock %}
