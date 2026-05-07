@@ -1,371 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-	<title>{% block title %}{% endblock %}</title>
-    <title>Available Products</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
-            margin: 40px;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<title>Elizabeth Antony – Résumé</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-        }
-
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .controls {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        input, select {
-            padding: 8px;
-            font-size: 14px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            flex: 1;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease;
-        }
-
-        li:hover {
-            transform: scale(1.02);
-            background-color: #f0f8ff;
-        }
-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: none;
-    background-color: #2c3e50;
-    color: white;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #34495e;
-}
-body {background-color: ivory;}
-h2   {color: blue;}
-p    {color: purple;}
-
- .elegant-title {
-    font-family: "Playfair Display", "Cormorant Garamond", Georgia, serif;
-    font-style: italic;
-    font-weight: 700;
-    font-size: 2.2rem;
-    color: #2b2b2b;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
-    margin: 0.2rem 0;
-    text-rendering: optimizeLegibility;
-    font-variant-ligatures: discretionary-ligatures;
-  }
-  .elegant-title::after {
-    content: "";
-    display: block;
-    width: 4.5rem;
-    height: 2px;
-    margin-top: 0.5rem;
-    background: linear-gradient(90deg, #b28c6e, #d3b58a, #b28c6e);
-    border-radius: 2px;
-    opacity: 0.8;
-  }
+<style>
   body {
-    background-color: ivory; /* page background */
-    font-family: "Georgia", serif;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #ffffff;
+    color: #111;
+    line-height: 1.6;
   }
-  table {
-    border-collapse: collapse;
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  header {
     text-align: center;
-    width: 100%;
+    margin-bottom: 60px;
   }
-  td {
-    padding: 15px;
-    vertical-align: top;
-    border: none;
+
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
   }
-  img {
-    display: block;
-    margin: 0 auto 20px auto; /* extra space between image and title/button */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  p {
-    font-size: 14px;
+
+  .contact {
+    font-size: 1rem;
     color: #555;
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 6px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    margin-bottom: 15px;
   }
-  .btn-link {
-    display: inline-block;
-    font-style: italic;
-    font-size: 15px;
+
+  a {
+    color: #0071e3;
     text-decoration: none;
-    color: gold; /* text in gold */
-    background: #00695c; /* peacock green */
-    padding: 10px 18px;
-    border-radius: 6px;
-    margin: 0 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-  }
-  .btn-link:hover {
-    background: #004d40; /* darker peacock green on hover */
-    color: #ffd700; /* brighter gold hover */
-    box-shadow: 0 6px 10px rgba(0,0,0,0.25);
   }
 
-  /* Alternating row colors */
-    #product-table tbody tr:nth-child(odd) {
-        background-color: #f9f9f9;
-    }
+  a:hover {
+    text-decoration: underline;
+  }
 
-    #product-table tbody tr:nth-child(even) {
-        background-color: #e0e0e0;
-    }
+  .section {
+    margin-bottom: 50px;
+  }
 
-    /* Hover effect */
-    #product-table tbody tr:hover {
-        background-color: #cce5ff;
-        cursor: pointer;
-    }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
 
-    /* Table styling */
-    #product-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
+  .item {
+    margin-bottom: 22px;
+  }
 
-    #product-table th, #product-table td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ccc;
-    }
+  .item-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
 
-     /* Light magenta header with yellow text */
-    #product-table th {
-        background-color: Brown; /* Light magenta */
-        color: White; /* Yellow text */
-	font-style: italic; /* Italic text */
+  .item-sub {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 6px;
+  }
 
-    }
+  ul {
+    margin: 8px 0 0 20px;
+    padding: 0;
+  }
 
-    /* Table styling */
-#product-table {
-    width: 60%;            /* Reduce table size */
-    margin: 20px auto;     /* Center the table */
-    border-collapse: collapse;
-}
+  li {
+    margin-bottom: 6px;
+  }
 
-#product-table th, #product-table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ccc;
-}
-.btn-link {
-  display: inline-block;
-  background-color: #2b6cb0;
-  color: white;
-  padding: 8px 12px;
-  text-decoration: none;
-  border-radius: 4px;
-  margin: 4px;
-}
-
-
-    </style>
+  footer {
+    text-align: center;
+    margin-top: 80px;
+    font-size: 0.9rem;
+    color: #777;
+  }
+</style>
 </head>
+
 <body>
- {% extends "menu.html" %}
-    {% block content %}
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<h3 class="elegant-title">The Ennoah</h3>
-<table>
-<td colspan="4" style="text-align:left; padding-top:5px;">
-</table>
-<div class="controls">
-    <input type="text" id="searchInput" placeholder="Search products..." />
-    <select id="categoryFilter">
-        <option value="">All Categories</option>
-        <option value="Food">Food</option>
-        <option value="Clothing">Clothing</option>
-        <option value="Bags">Bags</option>
-	<option value="Stories">Stories</option>
-    </select>
-    <select id="sortPrice">
-        <option value="">Sort by Price</option>
-        <option value="asc">Low to High</option>
-        <option value="desc">High to Low</option>
-    </select>
-    <button id="clearFilters">Clear</button>
-</div>
-   
- 
-<!--<h2>Relative URLs</h2>
-<h2>Heading 1</h2>
-<h2>Heading 2</h2>
-<h3>Heading 3</h3>
-<h4>Heading 4</h4>
-<h5>Heading 5</h5>
-<h6>Heading 6</h6>-->
-<table>
-  <tr>
-    <td>
-      <img src="{{ url_for('static', filename='images/goodfood.jpg') }}" alt="NutriDelish Food" width="200" height="150">
-      <p>Discover wholesome and delicious meals crafted with care, blending nutrition and taste for every occasion.</p>
-      <a href="/goodfood" class="btn-link">NutriDelish Gourmet Foods</a>
-    </td>
-    <td>
-      <img src="{{ url_for('static', filename='images/clothing.jpeg') }}" alt="Elegant Clothing" width="200" height="150">
-      <p>Explore timeless fashion pieces designed to bring out elegance and confidence in every style.</p>
-      <a href="StylishClothing" class="btn-link">Elegant & Stylish Clothing</a>
-    </td>
-    <td>
-      <img src="{{ url_for('static', filename='images/bags.jpg.jpeg') }}" alt="Aesthetic Bags" width="200" height="150">
-      <p>From chic handbags to practical totes, find accessories that combine beauty with everyday functionality.</p>
-      <a href="Bags" class="btn-link">Designer & Aesthetic Bags</a>
-    </td>
-    <td>
-      <img src="{{ url_for('static', filename='images/BestStories.jpeg') }}" alt="Profound Stories" width="200" height="150">
-      <p>Immerse yourself in captivating tales that inspire, entertain, and leave a lasting impression.</p>
-      <a href="Stories" class="btn-link">Inspiring & Profound Stories</a>
-    </td>
-  </tr>
-  <!-- Shop paragraph row -->
-  <tr>
-    <td colspan="4" style="text-align:center; padding:10px;"> 
-    </td>
-  </tr>
-  
-<tr>
-  <td colspan="4" style="text-align:center; padding:10px;">
-    <p style="font-family:Georgia, serif; font-style:italic; color:#444; font-size:16px; margin-top:10px;">
-  🌸 🛍️ Our shop brings together food, fashion, accessories, and inspiring stories, 
-  all curated to enrich your lifestyle with quality, elegance, and meaning 🌸
-  </td>
-</tr>
-<!-- Contact + Facebook row -->
-  <tr>
-  <td colspan="4" style="text-align:center; padding:10px;">
-    <a href="mailto:elizabethxantony@gmail.com" class="btn-link">📧 Contact Me</a>
-    <a href="https://www.facebook.com/elizabeth.antony.54" target="_blank" class="btn-link">🌐 Connect on Facebook</a>
-  </td>
-</tr>
-<!-- Schedule Meeting row -->
-<tr>
-  <td colspan="4" style="text-align:center; padding:10px;">
-    <a href="/schedule" class="btn-link">📅 Schedule a Meeting</a>
-  </td>
-</tr>
+<div class="container">
 
-</table>
-<table border="1" id="product-table">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Category</th>
-            <th>Price ($)</th>
-        </tr>
-    </thead>
-    <tbody id="product-list"></tbody>
-</table>
+  <header>
+    <h1>Elizabeth Antony</h1>
+    <div class="contact">
+      Boston, MA · 774‑312‑8048 · 
+      <a href="mailto:elizabethxantony@gmail.com">elizabethxantony@gmail.com</a> ·
+      <a href="https://www.linkedin.com/in/elizabeth-antony-42a90b317/" target="_blank">LinkedIn</a>
+       <a href="  https://lizantony.github.io/EnnoahProject/Project/index.html" target="_blank">github</a>    
+    </div>
+  </header>
 
- <div class="container">
-        
-        <ul id="product-list"></ul>
+  <!-- EDUCATION -->
+  <section class="section">
+    <div class="section-title">Education</div>
+
+    <div class="item">
+      <div class="item-title">Clark University, Worcester, MA</div>
+      <div class="item-sub">Master of Business Administration · Information Management & Business Analytics · GPA 3.9/4.0 (Dec 2026)</div>
     </div>
 
+    <div class="item">
+      <div class="item-title">College of Engineering, Kerala, India</div>
+      <div class="item-sub">Bachelor of Technology · Electrical & Electronics · GPA 3.9/4.0 (Oct 1999)</div>
+    </div>
+  </section>
 
-<script>
-    let allProducts = [];
+  <!-- ACADEMIC PROJECTS -->
+  <section class="section">
+    <div class="section-title">Academic Projects</div>
+    <ul>
+      <li>Supply chain analysis of semiconductor leaders NVIDIA and TSMC.</li>
+      <li>Applied financial accounting principles and ratio analysis to assess organizational strength.</li>
+      <li>Explored leadership frameworks including collaboration, conflict management, and communication.</li>
+      <li>Brand Pyramid & Global Marketing analysis for UBER, Ralph Lauren, and Four Seasons.</li>
+      <li>Built predictive pricing models using R on Seattle car sales data.</li>
+      <li>Analyzed pre‑ and post‑pandemic work trends using Python.</li>
+      <li>Developed interactive dashboards using Power BI.</li>
+      <li>Applied SQL for decision support and reporting.</li>
+      <li>Teaching Assistant for Management & Information Systems.</li>
+      <li>Member of Beta Gamma Sigma (BGS) and Beta Alpha Psi (BAP).</li>
+      <li>Created business websites using HTML, JavaScript, CSS, Python, Excel, Access, PostgreSQL.</li>
+    </ul>
+  </section>
 
-    function renderProducts(products) {
-        const list = document.getElementById('product-list');
-        list.innerHTML = '';
-        products.forEach(product => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${product['Product Name']}</td>
-                <td>${product['Category']}</td>
-                <td>${product['Price']}</td>
-            `;
-            list.appendChild(row);
-        });
-    }
+  <!-- PROFESSIONAL EXPERIENCE -->
+  <section class="section">
+    <div class="section-title">Professional Experience</div>
 
-    fetch('http://127.0.0.1:5000/get-products')
-        .then(response => response.json())
-        .then(data => {
-            allProducts = data;
-            renderProducts(allProducts);
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            document.getElementById('product-list').innerHTML =
-                '<tr><td colspan="3">Unable to load products.</td></tr>';
-        });
+    <div class="item">
+      <div class="item-title">HCL Technologies – Senior Technical Lead</div>
+      <div class="item-sub">MetLife Insurance, Aero, Klarity Semiconductor · Oct 2018 – May 2024</div>
+      <ul>
+        <li>Led team recruitment and deployed multiple .NET applications using Azure Artifacts & IIS, reducing release time by 20–30%.</li>
+        <li>Modernized USB429 and DFDR applications by refactoring C++/C# codebases, improving stability by ~30%.</li>
+        <li>Upgraded RAVE In‑Flight Entertainment platform with ASP.NET, Angular 8, and Web API, improving security and reducing latency by 15%.</li>
+        <li>Automated semiconductor recipe generation via CLI scripting, reducing manual configuration time by ~20%.</li>
+      </ul>
+    </div>
 
-    document.getElementById('searchInput').addEventListener('input', filterProducts);
-    document.getElementById('categoryFilter').addEventListener('change', filterProducts);
-    document.getElementById('sortPrice').addEventListener('change', filterProducts);
-    document.getElementById('clearFilters').addEventListener('click', () => {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('categoryFilter').value = '';
-        document.getElementById('sortPrice').value = '';
-        renderProducts(allProducts);
-    });
+    <div class="item">
+      <div class="item-title">Tech Mahindra – Systems Analyst</div>
+      <div class="item-sub">FIS™ Prime® · Feb 2018 – Sep 2018</div>
+      <ul>
+        <li>Migrated legacy C++ applications to .NET + Angular, improving scalability and UI responsiveness by ~30%.</li>
+        <li>Delivered Profile‑8 POC integrating modern workflows, reducing prototype turnaround by ~25%.</li>
+      </ul>
+    </div>
 
-    function filterProducts() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const selectedCategory = document.getElementById('categoryFilter').value;
-        const sortOrder = document.getElementById('sortPrice').value;
+    <div class="item">
+      <div class="item-sub">WIN‑PAK®, MAXPRO® VMS (Honeywell) · May 2017 – Dec 2017</div>
+      <ul>
+        <li>Enhanced VMS streaming efficiency using C#, reducing network load by ~20%.</li>
+        <li>Developed REST‑based services enabling third‑party camera operations, improving interoperability by ~30%.</li>
+        <li>Resolved defects in reporting and SQL workflows, reducing recurring incidents by ~25%.</li>
+      </ul>
+    </div>
 
-        let filtered = allProducts.filter(product => {
-            const matchesSearch = product['Product Name'].toLowerCase().includes(searchTerm);
-            const matchesCategory = selectedCategory === '' || product['Category'] === selectedCategory;
-            return matchesSearch && matchesCategory;
-        });
+    <div class="item">
+      <div class="item-title">Freelance Marketing Coordinator – Health Care</div>
+      <div class="item-sub">May 2010 – Apr 2014</div>
+      <ul>
+        <li>Coordinated regional healthcare recruiting and marketing campaigns, expanding audience reach by ~30%.</li>
+      </ul>
+    </div>
 
-        if (sortOrder === 'asc') {
-            filtered.sort((a, b) => a['Price'] - b['Price']);
-        } else if (sortOrder === 'desc') {
-            filtered.sort((a, b) => b['Price'] - a['Price']);
-        }
+    <div class="item">
+      <div class="item-title">Overseas Project – OCEANS, GSK</div>
+      <div class="item-sub">Apr 2005 – Apr 2009</div>
+      <ul>
+        <li>Coordinated UK‑US project launches and conducted on‑site due diligence for clinical applications.</li>
+        <li>Developed forecasting reports and automated schedulers in C++, improving SQL dashboard performance by 20–25%.</li>
+      </ul>
+    </div>
+  </section>
 
-        renderProducts(filtered);
-    }
-</script>
-    <footer>
-        <p>&copy; 2025 Ennoah. All rights reserved.</p>
-    </footer>
-{% endblock %}
+  <!-- CERTIFICATIONS -->
+  <section class="section">
+    <div class="section-title">Certifications & Awards</div>
+    <ul>
+      <li>Best Performance Award – HCL Technologies (2022).</li>
+      <li>Master of Commerce (Professional Accounting & Finance, U.S. GAAP) – JAIN University (GPA 3.9/4.0).</li>
+      <li>Post Graduate Certification in Business Management – XLRI (GPA 3.77/4.0).</li>
+      <li>Completed 35 hours of PMP training.</li>
+      <li>Recognition from Bell Laboratories & Guinness Superlatives for solving Rubik’s Cube at age 5.</li>
+      <li>PCEP Certified Entry‑Level Python Programmer.</li>
+    </ul>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <div class="section-title">Skills</div>
+    <ul>
+      <li><strong>Programming:</strong> C++, .NET, C#, SQL, HTML, JavaScript, PostgreSQL, Visual Studio</li>
+      <li><strong>Tools:</strong> Excel, Access, Power BI</li>
+      <li><strong>Training:</strong> Python, R, Angular, Hadoop, Machine Learning, Finance, Accounting</li>
+      <li><strong>Soft Skills:</strong> Teamwork, presenting, research, analytical thinking, communication, time management, adaptability, attention to detail</li>
+      <li><strong>Languages:</strong> English, Hindi (native); Telugu, Tamil, Malayalam (working fluent)</li>
+    </ul>
+  </section>
+
+  <footer>
+    © 2026 Elizabeth Antony
+  </footer>
+
+</div>
 </body>
 </html>
