@@ -148,10 +148,10 @@ def signin():
 def logout():
     session.clear()
     return redirect("/")
-@app.route("/index")
+@app.route("/meetinglist")
 def index():
     meetings = get_meetings()
-    return render_template("index.html", meetings=meetings, base_url=BASE_URL)
+    return render_template("meetinglist.html", meetings=meetings, base_url=BASE_URL)
 @app.route("/welcome")
 def welcome():
     return render_template("welcome.html")
