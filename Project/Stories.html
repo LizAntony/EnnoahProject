@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{% endblock %}</title>  
 <title>Centered Video</title>
   <style>
  .video-container {
@@ -231,7 +230,6 @@ table, th, td {
 </style>
 </head>
 <body>
-    {% block content %}{% endblock %}
 
     <footer>
         <p>&copy; 2025 Ennoah. All rights reserved.</p>
@@ -240,7 +238,7 @@ table, th, td {
   <div class="header-bar">
     <h2>Best Short Stories Ever</h2>
     <div class="homepage-link">
-      <a href="welcome">HomePage</a>
+      <a href="index">HomePage</a>
     </div>
 
   </div>
@@ -249,15 +247,15 @@ table, th, td {
   <table class="stories-gallery">
     <tr>
 
-<td><img src="{{ url_for('static', filename='images/lottery.jpg') }}" 
+<td><img src="lottery.jpg" 
      alt="The Lottery" class="story-img"></td>
-<td><img src="{{ url_for('static', filename='images/tell-tale-heart.jpg') }}" 
+<td><img src="tell-tale-heart.jpg" 
      alt="The Tell-Tale Heart" class="story-img"></td>
-<td><img src="{{ url_for('static', filename='images/gift-of-magi.jpg') }}" 
+<td><img src="gift-of-magi.jpg" 
      alt="The Gift of the Magi" class="story-img"></td>
-<td><img src="{{ url_for('static', filename='images/hills.jpg') }}" 
+<td><img src="hills.jpg" 
      alt="Hills Like White Elephants" class="story-img"></td>
-<td><img src="{{ url_for('static', filename='images/yellow-wallpaper.jpg') }}" 
+<td><img src="yellow-wallpaper.jpg" 
      alt="The Yellow Wallpaper" class="story-img"></td>
 
     </tr>
