@@ -193,10 +193,6 @@ table, th, td {
 </style>
 </head>
 <body>
-   {% extends "menu.html" %}
-
-    {% block content %}
-
 
 <section class="food-collections">
   <div class="header-bar">
@@ -469,6 +465,5 @@ document.addEventListener("DOMContentLoaded", updateCartCount);
     <footer>
         <p>&copy; 2025 Ennoah. All rights reserved.</p>
     </footer>
-{% endblock %}
 </body>
 </html>
