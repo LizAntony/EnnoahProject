@@ -1,54 +1,30 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Meeting Scheduler</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Registered</title>
+    <link rel="stylesheet" href="style.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    .btn { background: #2b6cb0; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; }
-    .badge { padding: 2px 6px; background: #edf2f7; border: 1px solid #cbd5e0; border-radius: 4px; }
-    .flash { margin: 8px 0; padding: 8px; border-radius: 4px; }
-    .success { background: #c6f6d5; }
-    .error { background: #fed7d7; }
-    table { border-collapse: collapse; width: 100%; margin-top: 16px; }
-    th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+    .success-msg {
+    font-size: 32px;
+    font-weight: 600;
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 20px 30px;
+    border-radius: 12px;
+    border-left: 6px solid #2e7d32;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
   </style>
 </head>
 <body>
-  <h1>Meeting Scheduler</h1>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="flash {{ category }}">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
 
-  <a class="btn" href="{{ url_for('schedule') }}">Schedule a new meeting</a>
+    <div class="container">
+      <h1 class="success-msg">Your meeting is registered.</h1>
+    </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Organizer</th>
-        <th>Attendee</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Join link</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in meetings %}
-        <tr>
-          <td>{{ m[1] }}</td>
-          <td>{{ m[2] }}</td>
-          <td>{{ m[3] }}</td>
-          <td>{{ m[4] }}</td>
-          <td>{{ m[5] }}</td>
-          <td><span class="badge">{{ base_url }}/join/{{ m[6] }}</span></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 </body>
 </html>
