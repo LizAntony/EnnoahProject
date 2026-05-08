@@ -289,6 +289,91 @@ table, th, td {
   </ul>
 
 </section>
+<script>
+ function activateQty(btn) {
+    const wrapper = btn.parentElement;
 
+    // Hide Add button, show qty box
+    btn.style.display = "none";
+    wrapper.querySelector(".qty-box").style.display = "flex";
+
+    // Prevent double-adding
+    if (btn.dataset.selected === "true") return;
+    btn.dataset.selected = "true";
+
+    // Get product name
+    const productName = btn.dataset.product;
+
+    // Load cart
+    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    // Add item with qty = 1
+    cartItems.push({
+        name: productName,
+        qty: 1
+    });
+
+    // Save back to storage
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+    // ⭐ Update top bar count immediately
+    updateCartCount();
+}
+
+  function increaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+    qty++;
+
+    qtySpan.textContent = qty;
+
+    if (qty >= 2) {
+      leftBtn.textContent = "−";
+    }
+  }
+
+  function decreaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+    const addBtn = box.parentElement.querySelector(".add-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+
+    if (qty === 1) {
+      box.style.display = "none";
+      addBtn.style.display = "inline-block";
+      return;
+    }
+
+    qty--;
+    qtySpan.textContent = qty;
+
+    if (qty === 1) {
+      leftBtn.textContent = "🗑️";
+    }
+  }
+function updateCartCount() {
+    let items = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (!Array.isArray(items)) {
+        items = [];
+        localStorage.setItem("cartItems", JSON.stringify(items));
+    }
+
+    let totalQty = 0;
+    items.forEach(i => totalQty += i.qty);
+
+    const cartCountEl = document.getElementById("cart-count");
+    if (cartCountEl) {
+        cartCountEl.textContent = totalQty;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+</script>
 </body>
 <html>
