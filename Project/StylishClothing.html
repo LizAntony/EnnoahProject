@@ -136,7 +136,12 @@ table, th, td {
   .gallery-img:hover {
     transform: scale(1.05);
   }
-
+     .left-btn, .plus-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
 </style>
 
 </style>
@@ -156,14 +161,64 @@ table, th, td {
     <tr>
 <td><img src="evening.jpg" 
      alt="Evening Dress" class="gallery-img"></td>
+         <div class="cart-control">
+      <button class="add-btn" data-product="cart-control" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="cart-control" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="cart-control" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
 <td><img src="casual.jpg" 
      alt="Casual Dress" class="gallery-img"></td>
+         <div class="cart-control">
+      <button class="add-btn" data-product="Casual Dress" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Casual Dress" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Casual Dress" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
 <td><img src="cocktail.jpg" 
      alt="Cocktail Dress" class="gallery-img"></td>
+         <div class="cart-control">
+      <button class="add-btn" data-product="Cocktail Dress" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Cocktail Dress" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Cocktail Dress" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
 <td><img src="Maxi.jpg" 
      alt="Maxi Dress" class="gallery-img"></td>
+         <div class="cart-control">
+      <button class="add-btn" data-product="Maxi Dress" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Maxi Dress" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Maxi Dress" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
 <td><img src="formal.jpg" 
      alt="Formal Dress" class="gallery-img"></td>
+         <div class="cart-control">
+      <button class="add-btn" data-product="Formal Dress" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Formal Dress" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Formal Dress" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
       
     </tr>
     <tr>
@@ -244,6 +299,91 @@ table, th, td {
   </ul>
 
 </section>
+<script>
+ function activateQty(btn) {
+    const wrapper = btn.parentElement;
 
+    // Hide Add button, show qty box
+    btn.style.display = "none";
+    wrapper.querySelector(".qty-box").style.display = "flex";
+
+    // Prevent double-adding
+    if (btn.dataset.selected === "true") return;
+    btn.dataset.selected = "true";
+
+    // Get product name
+    const productName = btn.dataset.product;
+
+    // Load cart
+    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    // Add item with qty = 1
+    cartItems.push({
+        name: productName,
+        qty: 1
+    });
+
+    // Save back to storage
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+    // ⭐ Update top bar count immediately
+    updateCartCount();
+}
+
+  function increaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+    qty++;
+
+    qtySpan.textContent = qty;
+
+    if (qty >= 2) {
+      leftBtn.textContent = "−";
+    }
+  }
+
+  function decreaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+    const addBtn = box.parentElement.querySelector(".add-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+
+    if (qty === 1) {
+      box.style.display = "none";
+      addBtn.style.display = "inline-block";
+      return;
+    }
+
+    qty--;
+    qtySpan.textContent = qty;
+
+    if (qty === 1) {
+      leftBtn.textContent = "🗑️";
+    }
+  }
+function updateCartCount() {
+    let items = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (!Array.isArray(items)) {
+        items = [];
+        localStorage.setItem("cartItems", JSON.stringify(items));
+    }
+
+    let totalQty = 0;
+    items.forEach(i => totalQty += i.qty);
+
+    const cartCountEl = document.getElementById("cart-count");
+    if (cartCountEl) {
+        cartCountEl.textContent = totalQty;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+</script>
 </body>
 </html>
