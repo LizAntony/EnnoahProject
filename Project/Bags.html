@@ -132,6 +132,12 @@ table, th, td {
     transform: scale(1.05);
   }
 
+  .left-btn, .plus-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
 
 </style>
 </head>
@@ -151,10 +157,60 @@ table, th, td {
 <table class="bags-image-table">
     <tr>
       <td><img src="tote.jpeg" alt="Urban Classic Tote" class="bag-img"></td>
+       <div class="cart-control">
+      <button class="add-btn" data-product="Urban Classic Tote" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Urban Classic Tote" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Urban Classic Tote" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
       <td><img src="crossbody.jpg" alt="Daylight Ease Crossbody" class="bag-img"></td>
+       <div class="cart-control">
+      <button class="add-btn" data-product="Daylight Ease Crossbody" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Daylight Ease Crossbody" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Daylight Ease Crossbody" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
       <td><img src="backpack.jpg" alt="Nomad Lite Backpack" class="bag-img"></td>
+       <div class="cart-control">
+      <button class="add-btn" data-product="Nomad Lite Backpack" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Nomad Lite Backpack" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Nomad Lite Backpack" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
       <td><img src="clutch.jpg" alt="Evening Poise Clutch" class="bag-img"></td>
+       <div class="cart-control">
+      <button class="add-btn" data-product="Evening Poise Clutch" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Evening Poise Clutch" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Evening Poise Clutch" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
       <td><img src="duffel.jpg" alt="Weekend Bound Duffel" class="bag-img"></td>
+       <div class="cart-control">
+      <button class="add-btn" data-product="Weekend Bound Duffel" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Weekend Bound Duffel" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Weekend Bound Duffel" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+
     </tr>
     <tr>
       <td>Urban Classic Tote</td>
