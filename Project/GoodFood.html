@@ -193,10 +193,6 @@ table, th, td {
 </style>
 </head>
 <body>
-   {% extends "menu.html" %}
-
-    {% block content %}
-
 
 <section class="food-collections">
   <div class="header-bar">
@@ -208,21 +204,13 @@ table, th, td {
 
   <!-- Food Gallery Table -->
   <table class="food-gallery">
-    <tr>
-
-<td><img src="salad.jpg'" 
-     alt="Fresh Garden Salad" class="food-img"></td>
-<td><img src="smoothie.jpg" 
-     alt="Fruit Smoothie" class="food-img"></td>
-<td><img src="grilledfish.jpg'" 
-     alt="Grilled Salmon" class="food-img"></td>
-<td><img src="quinoa.jpg" 
-     alt="Quinoa Bowl" class="food-img"></td>
-<td><img src="soup.jpg" 
-     alt="Vegetable Soup" class="food-img"></td>
-
+   <tr>
+      <td><img src="salad.jpg" alt="Fresh Garden Salad" class="food-img"></td>
+      <td><img src="smoothie.jpg" alt="Fruit Smoothie" class="food-img"></td>
+      <td><img src="grilledfish.jpg" alt="Grilled Salmon" class="food-img"></td>
+      <td><img src="quinoa.jpg" alt="Quinoa Bowl" class="food-img"></td>
+      <td><img src="soup.jpg" alt="Vegetable Soup" class="food-img"></td>
     </tr>
-
 <tr>
   <td>
     <strong>Garden Fresh</strong><br>
@@ -469,6 +457,5 @@ document.addEventListener("DOMContentLoaded", updateCartCount);
     <footer>
         <p>&copy; 2025 Ennoah. All rights reserved.</p>
     </footer>
-{% endblock %}
 </body>
 </html>
