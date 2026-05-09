@@ -262,6 +262,29 @@ table, th, td {
     min-width: 20px;
     text-align: center;
   }
+.btn {
+    background: linear-gradient(135deg, #ff9900, #ff7a00);
+    color: white;
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+    opacity: 0.95;
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+}
 
 </style>
 </head>
@@ -354,7 +377,7 @@ table, th, td {
     </tr>
   </table>
     <div style="text-align: center; margin-bottom: 20px;">
-    <button class="homepage-link" type="button" onclick="window.location.href='cart.html'">
+    <button class="btn" type="button" onclick="window.location.href='cart.html'">
         Place Order
     </button>
 </div>
