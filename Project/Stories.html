@@ -226,6 +226,42 @@ table, th, td {
   .stories-img:hover {
     transform: scale(1.05);
   }
+    .cart-control {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    background: #f4b400;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .qty-box {
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4b400;
+    border-radius: 20px;
+    padding: 6px 12px;
+    gap: 12px;
+  }
+
+  .left-btn, .plus-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .qty {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+  }
 
 </style>
 </head>
@@ -260,13 +296,69 @@ table, th, td {
 
     </tr>
     <tr>
-      <td><strong>The Lottery</strong><br>Shirley Jackson</td>
-      <td><strong>The Tell-Tale Heart</strong><br>Edgar Allan Poe</td>
-      <td><strong>The Gift of the Magi</strong><br>O. Henry</td>
-      <td><strong>Hills Like White Elephants</strong><br>Ernest Hemingway</td>
-      <td><strong>The Yellow Wallpaper</strong><br>Charlotte Perkins Gilman</td>
+      <td><strong>The Lottery</strong><br>Shirley Jackson
+        <div class="cart-control">
+      <button class="add-btn" data-product="The Lottery" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="The Lottery" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="The Lottery" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+</td>
+      <td><strong>The Tell-Tale Heart</strong><br>Edgar Allan Poe
+        <div class="cart-control">
+      <button class="add-btn" data-product="The Tell-Tale Heart" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="The Tell-Tale Heart" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="The Tell-Tale Heart" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+</td>
+      <td><strong>The Gift of the Magi</strong><br>O. Henry
+        <div class="cart-control">
+      <button class="add-btn" data-product="The Gift of the Magi" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="The Gift of the Magi" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="The Gift of the Magi" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+</td>
+      <td><strong>Hills Like White Elephants</strong><br>Ernest Hemingway
+        <div class="cart-control">
+      <button class="add-btn" data-product="Hills Like White Elephants" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="Hills Like White Elephants" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="Hills Like White Elephants" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+</td>
+      <td><strong>The Yellow Wallpaper</strong><br>Charlotte Perkins Gilman
+        <div class="cart-control">
+      <button class="add-btn" data-product="The Yellow Wallpaper" onclick="activateQty(this); event.stopPropagation();">Add to Cart</button>
+
+      <div class="qty-box" style="display:none;">
+        <button class="left-btn" data-product="The Yellow Wallpaper" onclick="decreaseQty(this); event.stopPropagation();">🗑️</button>
+        <span class="qty">1</span>
+        <button class="plus-btn" data-product="The Yellow Wallpaper" onclick="increaseQty(this); event.stopPropagation();">+</button>
+      </div>
+    </div>
+</td>
     </tr>
   </table>
+    <div style="text-align: center; margin-bottom: 20px;">
+    <button class="homepage-link" type="button" onclick="window.location.href='cart.html'">
+        Place Order
+    </button>
+</div>
+
 <div class = video-container>
 <iframe 
   src="https://player.vimeo.com/video/349059179" 
@@ -331,6 +423,91 @@ table, th, td {
   </ul>
 
 </section>
+<script>
+ function activateQty(btn) {
+    const wrapper = btn.parentElement;
 
+    // Hide Add button, show qty box
+    btn.style.display = "none";
+    wrapper.querySelector(".qty-box").style.display = "flex";
+
+    // Prevent double-adding
+    if (btn.dataset.selected === "true") return;
+    btn.dataset.selected = "true";
+
+    // Get product name
+    const productName = btn.dataset.product;
+
+    // Load cart
+    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    // Add item with qty = 1
+    cartItems.push({
+        name: productName,
+        qty: 1
+    });
+
+    // Save back to storage
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+    // ⭐ Update top bar count immediately
+    updateCartCount();
+}
+
+  function increaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+    qty++;
+
+    qtySpan.textContent = qty;
+
+    if (qty >= 2) {
+      leftBtn.textContent = "−";
+    }
+  }
+
+  function decreaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const leftBtn = box.querySelector(".left-btn");
+    const addBtn = box.parentElement.querySelector(".add-btn");
+
+    let qty = parseInt(qtySpan.textContent);
+
+    if (qty === 1) {
+      box.style.display = "none";
+      addBtn.style.display = "inline-block";
+      return;
+    }
+
+    qty--;
+    qtySpan.textContent = qty;
+
+    if (qty === 1) {
+      leftBtn.textContent = "🗑️";
+    }
+  }
+function updateCartCount() {
+    let items = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (!Array.isArray(items)) {
+        items = [];
+        localStorage.setItem("cartItems", JSON.stringify(items));
+    }
+
+    let totalQty = 0;
+    items.forEach(i => totalQty += i.qty);
+
+    const cartCountEl = document.getElementById("cart-count");
+    if (cartCountEl) {
+        cartCountEl.textContent = totalQty;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+</script>
 </body>
 </html>
