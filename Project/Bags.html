@@ -131,6 +131,29 @@ table, th, td {
   .bag-img:hover {
     transform: scale(1.05);
   }
+.cart-control {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    background: #f4b400;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .qty-box {
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4b400;
+    border-radius: 20px;
+    padding: 6px 12px;
+    gap: 12px;
+  }
 
   .left-btn, .plus-btn {
     background: none;
@@ -139,6 +162,11 @@ table, th, td {
     cursor: pointer;
   }
 
+  .qty {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
