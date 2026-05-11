@@ -319,9 +319,10 @@ table, th, td {
   </table>
 </section>
   <div style="text-align: center; margin-bottom: 20px;">
-    <button class="btn" type="button" onclick="window.location.href='cart.html'">
-        Place Order
-    </button>
+  <button class="btn" type="button" onclick="placeOrder()">
+      Place Order
+  </button>
+
 </div>
 <!-- Vimeo -->
 <div class = video-container>
@@ -396,6 +397,36 @@ table, th, td {
   </ul>
 </section>
 <script>
+
+function placeOrder() {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (cartItems.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    const order = {
+        date: new Date().toLocaleString(),
+        items: cartItems
+    };
+
+    // Load existing history
+    let history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+
+    // Add new order
+    history.push(order);
+
+    // Save back
+    localStorage.setItem("orderHistory", JSON.stringify(history));
+
+    // Clear cart
+    localStorage.removeItem("cartItems");
+
+    // Redirect to history page
+    window.location.href = "history.html";
+}
+
  function activateQty(btn) {
     const wrapper = btn.parentElement;
 
