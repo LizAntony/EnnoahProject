@@ -442,7 +442,7 @@ function activateQty(btn) {
 
     let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-    // If item already exists, do nothing
+    // Add only if not already in cart
     let existing = cart.find(i => i.name === productName);
     if (!existing) {
         cart.push({ name: productName, qty: 1 });
@@ -450,7 +450,6 @@ function activateQty(btn) {
 
     localStorage.setItem("cartItems", JSON.stringify(cart));
 }
-
 
 function increaseQty(btn) {
     const box = btn.parentElement;
@@ -497,7 +496,6 @@ function decreaseQty(btn) {
 
     localStorage.setItem("cartItems", JSON.stringify(cart));
 }
-
 
 function updateCartCount() {
     let items = JSON.parse(localStorage.getItem("cartItems")) || [];
