@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{% endblock %}</title>  
+<title>Good Food</title>  
 <title>Centered Video</title>
   <style>
     .video-container {
@@ -212,6 +212,43 @@ table, th, td {
     transform: translateY(0);
     box-shadow: 0 3px 8px rgba(0,0,0,0.18);
 }
+.invoice {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.invoice-header {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.invoice-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.invoice-table th,
+.invoice-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.invoice-total {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    text-align: right;
+}
 
 
 </style>
@@ -324,6 +361,7 @@ table, th, td {
   </button>
 
 </div>
+<div id="order-message"></div>
 <!-- Vimeo -->
 <div class = video-container>
   <iframe 
@@ -396,6 +434,7 @@ table, th, td {
     <li><strong>Soups:</strong> Comforting, light, and nourishing</li>
   </ul>
 </section>
+
 <script>
 
 function placeOrder() {
@@ -406,19 +445,26 @@ function placeOrder() {
         return;
     }
 
-    const order = {
-        date: new Date().toLocaleString(),
-        items: cartItems
-    };
+    // Show success message
+    document.getElementById("order-message").innerHTML = `
+        <div style="
+            background: #e8ffe8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #2d7a2d;
+            text-align: center;
+            border: 1px solid #b6e6b6;
+        ">
+            ✅ Your order has been placed successfully!
+        </div>
+    `;
 
-    let history = JSON.parse(localStorage.getItem("orderHistory")) || [];
-    history.push(order);
-    localStorage.setItem("orderHistory", JSON.stringify(history));
-
-    // Clear cart storage
+    // Clear cart
     localStorage.removeItem("cartItems");
 
-    // Reset UI buttons
+    // Reset UI
     document.querySelectorAll(".qty-box").forEach(box => {
         box.style.display = "none";
     });
@@ -427,9 +473,6 @@ function placeOrder() {
         btn.style.display = "inline-block";
         btn.dataset.selected = "false";
     });
-
-    // Redirect
-    window.location.href = "history.html";
 }
 
 function activateQty(btn) {
@@ -442,7 +485,6 @@ function activateQty(btn) {
 
     let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-    // Add only if not already in cart
     let existing = cart.find(i => i.name === productName);
     if (!existing) {
         cart.push({ name: productName, qty: 1 });
@@ -479,7 +521,6 @@ function decreaseQty(btn) {
     let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
     if (qty === 1) {
-        // Remove item
         cart = cart.filter(i => i.name !== productName);
         localStorage.setItem("cartItems", JSON.stringify(cart));
 
