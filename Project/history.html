@@ -81,74 +81,74 @@
             "Comfort Nourish Soup": 6.49
         };
 
-        function loadInvoices() {
-            const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
-            const container = document.getElementById("invoice-list");
+       function loadInvoices() {
+    const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    const container = document.getElementById("invoice-list");
 
-            if (history.length === 0) {
-                container.innerHTML = "<p>No invoices found.</p>";
-                return;
-            }
+    if (history.length === 0) {
+        container.innerHTML = "<p>No invoices found.</p>";
+        return;
+    }
 
-            history.slice().reverse().forEach(order => {
-                const div = document.createElement("div");
-                div.classList.add("invoice");
+    // ⭐ Get ONLY the latest order
+    const order = history[history.length - 1];
 
-                // ⭐ GROUP ITEMS
-                const grouped = {};
-                order.items.forEach(i => {
-                    if (!grouped[i.name]) grouped[i.name] = { qty: 0 };
-                    grouped[i.name].qty += i.qty;
-                });
+    const div = document.createElement("div");
+    div.classList.add("invoice");
 
-                let rows = "";
-                let orderTotal = 0;
+    // ⭐ GROUP ITEMS
+    const grouped = {};
+    order.items.forEach(i => {
+        if (!grouped[i.name]) grouped[i.name] = { qty: 0 };
+        grouped[i.name].qty += i.qty;
+    });
 
-                for (const name in grouped) {
-                    const qty = grouped[name].qty;
-                    const price = productPrices[name] || 0;
-                    const lineTotal = price * qty;
-                    orderTotal += lineTotal;
+    let rows = "";
+    let orderTotal = 0;
 
-                    rows += `
-                        <tr>
-                            <td>${name}</td>
-                            <td>${qty}</td>
-                            <td>$${price.toFixed(2)}</td>
-                            <td>$${lineTotal.toFixed(2)}</td>
-                        </tr>
-                    `;
-                }
+    for (const name in grouped) {
+        const qty = grouped[name].qty;
+        const price = productPrices[name] || 0;
+        const lineTotal = price * qty;
+        orderTotal += lineTotal;
 
-                div.innerHTML = `
-                    <div class="invoice-header">
-                        <h3>INVOICE</h3>
-                        <p><strong>Date:</strong> ${order.date}</p>
-                        <p><strong>Invoice #:</strong> INV-${Math.floor(Math.random()*90000)+10000}</p>
-                    </div>
+        rows += `
+            <tr>
+                <td>${name}</td>
+                <td>${qty}</td>
+                <td>$${price.toFixed(2)}</td>
+                <td>$${lineTotal.toFixed(2)}</td>
+            </tr>
+        `;
+    }
 
-                    <table class="invoice-table">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rows}</tbody>
-                    </table>
+    div.innerHTML = `
+        <div class="invoice-header">
+            <h3>INVOICE</h3>
+            <p><strong>Date:</strong> ${order.date}</p>
+            <p><strong>Invoice #:</strong> INV-${Math.floor(Math.random()*90000)+10000}</p>
+        </div>
 
-                    <div class="invoice-total">
-                        <strong>Total Paid: $${orderTotal.toFixed(2)}</strong>
-                    </div>
-                `;
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
 
-                container.appendChild(div);
-            });
-        }
+        <div class="invoice-total">
+            <strong>Total Paid: $${orderTotal.toFixed(2)}</strong>
+        </div>
+    `;
 
-        document.addEventListener("DOMContentLoaded", loadInvoices);
+    container.appendChild(div);
+}
+
     </script>
 
 </body>
