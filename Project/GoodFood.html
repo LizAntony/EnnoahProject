@@ -469,15 +469,24 @@ function placeOrder() {
 
     let qty = parseInt(qtySpan.textContent);
     qty++;
-
     qtySpan.textContent = qty;
 
     if (qty >= 2) {
-      leftBtn.textContent = "−";
+        leftBtn.textContent = "−";
     }
-  }
 
-  function decreaseQty(btn) {
+    // ⭐ Update cart storage
+    const productName = box.dataset.product;
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    const item = cart.find(i => i.name === productName);
+    if (item) item.qty = qty;
+
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+}
+
+
+function decreaseQty(btn) {
     const box = btn.parentElement;
     const qtySpan = box.querySelector(".qty");
     const leftBtn = box.querySelector(".left-btn");
@@ -485,19 +494,33 @@ function placeOrder() {
 
     let qty = parseInt(qtySpan.textContent);
 
+    const productName = box.dataset.product;
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
     if (qty === 1) {
-      box.style.display = "none";
-      addBtn.style.display = "inline-block";
-      return;
+        // Remove item from cart
+        cart = cart.filter(i => i.name !== productName);
+        localStorage.setItem("cartItems", JSON.stringify(cart));
+
+        box.style.display = "none";
+        addBtn.style.display = "inline-block";
+        return;
     }
 
     qty--;
     qtySpan.textContent = qty;
 
     if (qty === 1) {
-      leftBtn.textContent = "🗑️";
+        leftBtn.textContent = "🗑️";
     }
-  }
+
+    // ⭐ Update cart storage
+    const item = cart.find(i => i.name === productName);
+    if (item) item.qty = qty;
+
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+}
+
 function updateCartCount() {
     let items = JSON.parse(localStorage.getItem("cartItems")) || [];
 
