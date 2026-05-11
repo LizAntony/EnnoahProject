@@ -411,19 +411,24 @@ function placeOrder() {
         items: cartItems
     };
 
-    // Load existing history
     let history = JSON.parse(localStorage.getItem("orderHistory")) || [];
-
-    // Add new order
     history.push(order);
-
-    // Save back
     localStorage.setItem("orderHistory", JSON.stringify(history));
 
-    // Clear cart
+    // Clear cart storage
     localStorage.removeItem("cartItems");
 
-    // Redirect to history page
+    // Reset UI buttons
+    document.querySelectorAll(".qty-box").forEach(box => {
+        box.style.display = "none";
+    });
+
+    document.querySelectorAll(".add-btn").forEach(btn => {
+        btn.style.display = "inline-block";
+        btn.dataset.selected = "false";
+    });
+
+    // Redirect
     window.location.href = "history.html";
 }
 
