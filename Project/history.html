@@ -2,116 +2,132 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Order History</title>
+    <title>Order Invoice</title>
 
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f7f7f7;
+            background: #f4f4f4;
             margin: 0;
             padding: 20px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .history-block {
+        .invoice {
             background: white;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        table {
+        .invoice-header {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .invoice-header h3 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .invoice-header p {
+            margin: 4px 0;
+            color: #444;
+        }
+
+        .invoice-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
 
-        th, td {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
+        .invoice-table th,
+        .invoice-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
             text-align: left;
         }
 
-        th {
-            background: #f0f0f0;
+        .invoice-table th {
+            background: #fafafa;
         }
 
-        .order-total {
-            margin-top: 10px;
-            font-size: 1.1rem;
+        .invoice-total {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            text-align: right;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Order History</h2>
+    <h2>Your Invoices</h2>
 
-    <div id="history-list"></div>
+    <div id="invoice-list"></div>
 
     <script>
         const productPrices = {
-            "Garden Fresh": 4.99,
+            "Garden Fresh Salad": 0.00,
             "Morning Glow Smoothie": 5.99,
             "Ocean Vitality Grilled Fish": 12.49,
             "Wholesome Bowl Quinoa": 8.99,
             "Comfort Nourish Soup": 6.49
         };
 
-        function loadHistory() {
+        function loadInvoices() {
             const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
-            const container = document.getElementById("history-list");
+            const container = document.getElementById("invoice-list");
 
             if (history.length === 0) {
-                container.innerHTML = "<p>No past orders found.</p>";
+                container.innerHTML = "<p>No invoices found.</p>";
                 return;
             }
 
-            // Show newest first
             history.slice().reverse().forEach(order => {
                 const div = document.createElement("div");
-                div.classList.add("history-block");
+                div.classList.add("invoice");
+
+                // ⭐ GROUP ITEMS
+                const grouped = {};
+                order.items.forEach(i => {
+                    if (!grouped[i.name]) grouped[i.name] = { qty: 0 };
+                    grouped[i.name].qty += i.qty;
+                });
 
                 let rows = "";
                 let orderTotal = 0;
 
-         // ⭐ GROUP ITEMS BY NAME
-const grouped = {};
+                for (const name in grouped) {
+                    const qty = grouped[name].qty;
+                    const price = productPrices[name] || 0;
+                    const lineTotal = price * qty;
+                    orderTotal += lineTotal;
 
-order.items.forEach(i => {
-    if (!grouped[i.name]) {
-        grouped[i.name] = { qty: 0 };
-    }
-    grouped[i.name].qty += i.qty;
-});
-
-// ⭐ BUILD TABLE ROWS
-for (const name in grouped) {
-    const qty = grouped[name].qty;
-    const price = productPrices[name] || 0;
-    const lineTotal = price * qty;
-    orderTotal += lineTotal;
-
-    rows += `
-        <tr>
-            <td>${name}</td>
-            <td>${qty}</td>
-            <td>$${price.toFixed(2)}</td>
-            <td>$${lineTotal.toFixed(2)}</td>
-        </tr>
-    `;
-}
-
+                    rows += `
+                        <tr>
+                            <td>${name}</td>
+                            <td>${qty}</td>
+                            <td>$${price.toFixed(2)}</td>
+                            <td>$${lineTotal.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }
 
                 div.innerHTML = `
-                    <h3>Order on ${order.date}</h3>
+                    <div class="invoice-header">
+                        <h3>INVOICE</h3>
+                        <p><strong>Date:</strong> ${order.date}</p>
+                        <p><strong>Invoice #:</strong> INV-${Math.floor(Math.random()*90000)+10000}</p>
+                    </div>
 
-                    <table class="history-table">
+                    <table class="invoice-table">
                         <thead>
                             <tr>
                                 <th>Item</th>
@@ -123,14 +139,16 @@ for (const name in grouped) {
                         <tbody>${rows}</tbody>
                     </table>
 
-                    <p class="order-total"><strong>Total Paid: $${orderTotal.toFixed(2)}</strong></p>
+                    <div class="invoice-total">
+                        <strong>Total Paid: $${orderTotal.toFixed(2)}</strong>
+                    </div>
                 `;
 
                 container.appendChild(div);
             });
         }
 
-        document.addEventListener("DOMContentLoaded", loadHistory);
+        document.addEventListener("DOMContentLoaded", loadInvoices);
     </script>
 
 </body>
