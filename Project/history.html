@@ -80,20 +80,33 @@
                 let rows = "";
                 let orderTotal = 0;
 
-                order.items.forEach(i => {
-                    const price = productPrices[i.name] || 0;
-                    const lineTotal = price * i.qty;
-                    orderTotal += lineTotal;
+         // ⭐ GROUP ITEMS BY NAME
+const grouped = {};
 
-                    rows += `
-                        <tr>
-                            <td>${i.name}</td>
-                            <td>${i.qty}</td>
-                            <td>$${price.toFixed(2)}</td>
-                            <td>$${lineTotal.toFixed(2)}</td>
-                        </tr>
-                    `;
-                });
+order.items.forEach(i => {
+    if (!grouped[i.name]) {
+        grouped[i.name] = { qty: 0 };
+    }
+    grouped[i.name].qty += i.qty;
+});
+
+// ⭐ BUILD TABLE ROWS
+for (const name in grouped) {
+    const qty = grouped[name].qty;
+    const price = productPrices[name] || 0;
+    const lineTotal = price * qty;
+    orderTotal += lineTotal;
+
+    rows += `
+        <tr>
+            <td>${name}</td>
+            <td>${qty}</td>
+            <td>$${price.toFixed(2)}</td>
+            <td>$${lineTotal.toFixed(2)}</td>
+        </tr>
+    `;
+}
+
 
                 div.innerHTML = `
                     <h3>Order on ${order.date}</h3>
