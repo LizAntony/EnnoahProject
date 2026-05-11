@@ -432,73 +432,55 @@ function placeOrder() {
     window.location.href = "history.html";
 }
 
- function activateQty(btn) {
+function activateQty(btn) {
     const wrapper = btn.parentElement;
 
-    // Hide Add button, show qty box
     btn.style.display = "none";
     wrapper.querySelector(".qty-box").style.display = "flex";
 
-    // Prevent double-adding
-    if (btn.dataset.selected === "true") return;
-    btn.dataset.selected = "true";
-
-    // Get product name
     const productName = btn.dataset.product;
 
-    // Load cart
-    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-    // Add item with qty = 1
-    cartItems.push({
-        name: productName,
-        qty: 1
-    });
-
-    // Save back to storage
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-    // ⭐ Update top bar count immediately
-    updateCartCount();
-}
-
-  function increaseQty(btn) {
-    const box = btn.parentElement;
-    const qtySpan = box.querySelector(".qty");
-    const leftBtn = box.querySelector(".left-btn");
-
-    let qty = parseInt(qtySpan.textContent);
-    qty++;
-    qtySpan.textContent = qty;
-
-    if (qty >= 2) {
-        leftBtn.textContent = "−";
-    }
-
-    // ⭐ Update cart storage
-    const productName = box.dataset.product;
     let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-    const item = cart.find(i => i.name === productName);
-    if (item) item.qty = qty;
+    // If item already exists, do nothing
+    let existing = cart.find(i => i.name === productName);
+    if (!existing) {
+        cart.push({ name: productName, qty: 1 });
+    }
 
     localStorage.setItem("cartItems", JSON.stringify(cart));
 }
 
 
+function increaseQty(btn) {
+    const box = btn.parentElement;
+    const qtySpan = box.querySelector(".qty");
+    const productName = box.dataset.product;
+
+    let qty = parseInt(qtySpan.textContent);
+    qty++;
+    qtySpan.textContent = qty;
+
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    let item = cart.find(i => i.name === productName);
+
+    if (item) item.qty = qty;
+
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+}
+
 function decreaseQty(btn) {
     const box = btn.parentElement;
     const qtySpan = box.querySelector(".qty");
-    const leftBtn = box.querySelector(".left-btn");
     const addBtn = box.parentElement.querySelector(".add-btn");
+    const productName = box.dataset.product;
 
     let qty = parseInt(qtySpan.textContent);
 
-    const productName = box.dataset.product;
     let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
     if (qty === 1) {
-        // Remove item from cart
+        // Remove item
         cart = cart.filter(i => i.name !== productName);
         localStorage.setItem("cartItems", JSON.stringify(cart));
 
@@ -510,16 +492,12 @@ function decreaseQty(btn) {
     qty--;
     qtySpan.textContent = qty;
 
-    if (qty === 1) {
-        leftBtn.textContent = "🗑️";
-    }
-
-    // ⭐ Update cart storage
-    const item = cart.find(i => i.name === productName);
+    let item = cart.find(i => i.name === productName);
     if (item) item.qty = qty;
 
     localStorage.setItem("cartItems", JSON.stringify(cart));
 }
+
 
 function updateCartCount() {
     let items = JSON.parse(localStorage.getItem("cartItems")) || [];
