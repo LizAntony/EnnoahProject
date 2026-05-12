@@ -518,8 +518,20 @@ table, th, td {
 
 <script>
 
+let lastInvoiceText = "";
+let lastInvoiceNumber = "";
+let lastInvoiceDate = "";
+
+function sendInvoiceMail() {
+    const email = "elizabethxantony@gmail.com";
+    const subject = `Invoice ${lastInvoiceNumber}`;
+
+    const body = encodeURIComponent(lastInvoiceText);
+
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+}
+
 function placeOrder() {
-    // Read the actual cart from localStorage
     const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
 
     if (cartItems.length === 0) {
@@ -527,13 +539,22 @@ function placeOrder() {
         return;
     }
 
-    // Build invoice list from actual cart values
+    // Generate invoice number + date/time
+    lastInvoiceNumber = "INV-" + (Math.floor(Math.random() * 90000) + 10000);
+    lastInvoiceDate = new Date().toLocaleString();
+
     let itemList = "";
+    let emailText = `Invoice Number: ${lastInvoiceNumber}\nDate: ${lastInvoiceDate}\n\nItems:\n\n`;
+
     cartItems.forEach(item => {
         itemList += `<li>${item.name} — Qty: ${item.qty}</li>`;
+        emailText += `${item.name} — Qty: ${item.qty}\n`;
     });
 
-    // Display invoice message
+    // Save invoice text for email
+    lastInvoiceText = emailText;
+
+    // Display invoice on screen
     document.getElementById("invoice-message").innerHTML = `
         <div style="
             background: #fff7e6;
@@ -546,19 +567,24 @@ function placeOrder() {
         ">
             <h3 style="margin-top: 0;">🧾 Invoice</h3>
 
-            <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-            <p><strong>Invoice #:</strong> INV-${Math.floor(Math.random()*90000)+10000}</p>
+            <p><strong>Date:</strong> ${lastInvoiceDate}</p>
+            <p><strong>Invoice #:</strong> ${lastInvoiceNumber}</p>
 
             <p><strong>Items:</strong></p>
             <ul style="text-align:left; margin-left:20px;">
                 ${itemList}
             </ul>
 
-            <p>Thank you for your order!</p>
+            <button onclick="sendInvoiceMail()" 
+                style="margin-top:15px; padding:10px 20px; background:#8a5a00; color:white; border:none; border-radius:5px; cursor:pointer;">
+                Send Mail
+            </button>
+
+            <p style="margin-top:15px;">Thank you for your order!</p>
         </div>
     `;
 
-    // Clear cart after invoice is shown
+    // Clear cart
     localStorage.removeItem("cartItems");
 
     // Reset UI
@@ -575,19 +601,30 @@ function placeOrder() {
 function activateQty(btn) {
     const wrapper = btn.parentElement;
 
+    // Show qty box, hide Add button
     btn.style.display = "none";
-    wrapper.querySelector(".qty-box").style.display = "flex";
+    const qtyBox = wrapper.querySelector(".qty-box");
+    qtyBox.style.display = "flex";
+
+    // Reset qty to 1 in UI
+    qtyBox.querySelector(".qty").textContent = "1";
 
     const productName = btn.dataset.product;
 
+    // Load cart
     let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-    let existing = cart.find(i => i.name === productName);
-    if (!existing) {
-        cart.push({ name: productName, qty: 1 });
-    }
+    // ⭐ Remove old entry if it exists
+    cart = cart.filter(i => i.name !== productName);
 
+    // ⭐ Add fresh entry with qty = 1
+    cart.push({ name: productName, qty: 1 });
+
+    // Save back
     localStorage.setItem("cartItems", JSON.stringify(cart));
+
+    // Update top bar count
+    updateCartCount();
 }
 
 function increaseQty(btn) {
