@@ -250,6 +250,58 @@ table, th, td {
     text-align: right;
 }
 
+/* Side-by-side layout */
+.cake-video-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+/* Equal width columns */
+.cake-box, .video-box {
+    flex: 1;
+}
+
+/* Make cake image same size as video */
+.cake-img {
+    width: 100%;
+    height: 360px;        /* same height as video */
+    object-fit: cover;    /* fills area nicely */
+    border-radius: 10px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* Video same size */
+.video-container iframe {
+    width: 100%;
+    height: 360px;
+    border-radius: 10px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .cake-video-wrapper {
+        flex-direction: column;
+    }
+}
+
+
+/* Three-column layout */
+.three-col-wrapper {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.col-box {
+    flex: 1;
+    background: #fffdf8;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ffd591;
+}
 
 </style>
 </head>
@@ -444,15 +496,94 @@ table, th, td {
 </div>
 <div id="invoice-message" style="max-width: 600px; margin: 30px auto;"></div>
 <!-- Vimeo -->
-<div class = video-container>
-  <iframe 
-  src="https://player.vimeo.com/video/349059179" 
-  width="640" height="360" 
-  frameborder="0" 
-  allow="autoplay; fullscreen; picture-in-picture" 
-  allowfullscreen>
-</iframe>
+<!-- HEADING -->
+<h2>🍽️ Freshly Prepared on Request - Power‑Packed Protein Cake</h2>
+
+<!-- SIDE-BY-SIDE WRAPPER -->
+<div class="cake-video-wrapper">
+
+    <!-- LEFT: Cake -->
+    <div class="cake-box">
+        <img src="Cake.jpg" alt="Power Packed Protein Cake" class="cake-img">
+	
+        <div class="cart-control">
+            <button class="add-btn" 
+                data-product="Power‑Packed Protein Cake"
+                onclick="activateQty(this); event.stopPropagation();">
+                Add to Cart
+            </button>
+
+            <div class="qty-box" 
+                data-product="Power‑Packed Protein Cake"
+                style="display:none;">
+                
+                <button class="left-btn" 
+                    onclick="decreaseQty(this); event.stopPropagation();">
+                    🗑️
+                </button>
+
+                <span class="qty">1</span>
+
+                <button class="plus-btn" 
+                    onclick="increaseQty(this); event.stopPropagation();">
+                    +
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: Video -->
+    <div class="video-box">
+        <div class="video-container">
+            <iframe 
+                src="https://player.vimeo.com/video/349059179?autoplay=1&muted=1&loop=1"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
 </div>
+
+<!-- THREE COLUMN SECTION -->
+<div class="three-col-wrapper">
+
+    <div class="col-box">
+        <h4>Benefits</h4>
+        <ul>
+            <li>High in protein for muscle repair</li>
+            <li>Gentle on the stomach</li>
+            <li>Sustained energy without crashes</li>
+            <li>Helps with weight management</li>
+            <li>Made with clean, natural ingredients</li>
+        </ul>
+    </div>
+
+    <div class="col-box">
+        <h4>When to Consume</h4>
+        <ul>
+            <li>Morning breakfast boost</li>
+            <li>Pre‑workout energy</li>
+            <li>Post‑workout recovery</li>
+            <li>Evening snack</li>
+            <li>Healthy dessert anytime</li>
+        </ul>
+    </div>
+
+    <div class="col-box">
+        <h4>Expected Outcome</h4>
+        <ul>
+            <li>Improved muscle tone</li>
+            <li>Better satiety & reduced cravings</li>
+            <li>Stable energy levels</li>
+            <li>No bloating or acidity</li>
+            <li>Healthier dessert habit</li>
+        </ul>
+    </div>
+
+</div>
+
 
   <!-- Food Collections Table -->
   <table class="food-table">
