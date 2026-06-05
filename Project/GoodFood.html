@@ -652,7 +652,15 @@ table, th, td {
 let lastInvoiceText = "";
 let lastInvoiceNumber = "";
 let lastInvoiceDate = "";
-
+// PRICE LIST FOR ALL ITEMS
+const priceList = {
+    "Garden Fresh Salad": 8,
+    "Morning Glow Smoothie": 6,
+    "Ocean Vitality Grilled Fish": 14,
+    "Wholesome Bowl Quinoa": 10,
+    "Comfort Nourish Soup": 8,
+    "Power‑Packed Protein Cake": 7
+};
 function sendInvoiceMail() {
     const email = "antonyoelizabeth@yahoo.com";
     const subject = `Invoice ${lastInvoiceNumber}`;
@@ -677,10 +685,26 @@ function placeOrder() {
     let itemList = "";
     let emailText = `Invoice Number: ${lastInvoiceNumber}\nDate: ${lastInvoiceDate}\n\nItems:\n\n`;
 
+let grandTotal = 0;
+
     cartItems.forEach(item => {
-        itemList += `<li>${item.name} — Qty: ${item.qty}</li>`;
-        emailText += `${item.name} — Qty: ${item.qty}\n`;
+        const price = priceList[item.name] || 0;
+        const lineTotal = item.qty * price;
+        grandTotal += lineTotal;
+
+        // On-screen invoice list
+        itemList += `
+            <li>
+                ${item.name} — Qty: ${item.qty} × $${price} 
+                = <strong>$${lineTotal.toFixed(2)}</strong>
+            </li>
+        `;
+
+        // Email invoice text
+        emailText += `${item.name} — Qty: ${item.qty} × $${price} = $${lineTotal.toFixed(2)}\n`;
     });
+
+    emailText += `\nGrand Total: $${grandTotal.toFixed(2)}`;
 
     // Save invoice text for email
     lastInvoiceText = emailText;
