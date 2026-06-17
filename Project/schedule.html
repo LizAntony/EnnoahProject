@@ -8,10 +8,38 @@
     label { display:block; margin-top: 12px; }
     input, textarea { width: 100%; padding: 8px; }
     .btn { margin-top: 16px; background: #2b6cb0; color: #fff; padding: 8px 12px; border: 0; border-radius: 4px; cursor: pointer; }
+  .homepage-link a {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #2b2b2b;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #d3b58a;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .homepage-link a:hover {
+    background: #d3b58a;
+    color: #fff;
+  }
+.header-row {
+    display: flex;
+    justify-content: space-between; /* pushes HomePage to the right */
+    align-items: center;            /* keeps both vertically aligned */
+    width: 100%;
+    margin-bottom: 20px;
+}
   </style>
 </head>
 <body>
-  <h1>Schedule a new meeting</h1>
+ <div class="header-row">
+    <h1>Schedule a new meeting</h1>
+
+    <div class="homepage-link">
+        <a href="index.html">HomePage</a>
+    </div>
+</div>
   <form method="post">
     <label>Title
       <input type="text" name="title" placeholder="Project sync">
@@ -37,7 +65,27 @@
     <button class="btn" type="button" onclick="window.location.href='/EnnoahProject/Project/meetinglist.html'">
     Create
 </button>
-
+<button class="btn" type="button" onclick="createGoogleEvent()">
+    Create
+</button>
   </form>
+  <script>
+function createGoogleEvent() {
+    const title = encodeURIComponent(document.querySelector('input[name="title"]').value);
+    const start = document.querySelector('input[name="start_time"]').value.replace(/[-:]/g, "").replace(".000", "");
+    const end = document.querySelector('input[name="end_time"]').value.replace(/[-:]/g, "").replace(".000", "");
+    const details = encodeURIComponent(document.querySelector('textarea[name="notes"]').value);
+    const link = encodeURIComponent(document.querySelector('input[name="external_link"]').value);
+
+    const url =
+      `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+      `&text=${title}` +
+      `&dates=${start}/${end}` +
+      `&details=${details}%0A${link}`;
+
+    window.open(url, "_blank");
+}
+</script>
+
 </body>
 </html>
